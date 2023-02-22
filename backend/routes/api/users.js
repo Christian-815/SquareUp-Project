@@ -18,6 +18,17 @@ const validateSignup = [
         .exists({ checkFalsy: true })
         .isEmail()
         .withMessage('Please provide a valid email.'),
+    check('email')
+        .custom(value => {
+            return User.findOne({
+                where: {email: value}
+            }).then(user => {
+                if (user) {
+                    return Promise.reject('User with that email already exists')
+                }
+            })
+        })
+        .withMessage(),
     check('username')
         .exists({ checkFalsy: true })
         .isLength({ min: 4 })
@@ -41,11 +52,59 @@ router.post(
         const { firstName, lastName, email, password, username } = req.body;
         const user = await User.signup({ firstName, lastName, email, username, password });
 
-        await setTokenCookie(res, user);
+        const jsonUser = user.toJSON();
+        const token = await setTokenCookie(res, user);
+        jsonUser.token = token
+        // console.log(jsonUser)
 
-        return res.json({
-            user: user
-        });
+
+        return res.json(jsonUser);
+    },
+    async (err, req, res, next) => {
+        if (err.errors.email === 'User with that email already exists') {
+            err.status = 403;
+            err.message = "User already exists";
+            delete err.title
+            // console.log('///////////////////////////////////////////////////////')
+            return res.status(403).json({
+                message: err.message,
+                statusCode: err.status,
+                error: err.errors
+            })
+        };
+
+        if (err.errors.email) {
+            err.status = 400;
+            err.message = "Validation error";
+            err.errors.email = "Invalid email"
+            return res.status(400).json({
+                message: err.message,
+                statusCode: err.status,
+                error: err.errors
+            })
+        };
+
+        if (err.errors.firstName) {
+            err.status = 400;
+            err.message = "Validation error";
+            err.errors.firstName = "First Name is required"
+            return res.status(400).json({
+                message: err.message,
+                statusCode: err.status,
+                error: err.errors
+            })
+        };
+
+        if (err.errors.lastName) {
+            err.status = 400;
+            err.message = "Validation error";
+            err.errors.lastName = "Last Name is required"
+            return res.status(400).json({
+                message: err.message,
+                statusCode: err.status,
+                error: err.errors
+            })
+        };
     }
 );
 
