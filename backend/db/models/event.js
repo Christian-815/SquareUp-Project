@@ -19,6 +19,8 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: 'CASCADE',
         hooks: true
       });
+      Event.belongsTo(models.Group, {foreignKey: 'groupId'});
+      Event.belongsTo(models.Venue, {foreignKey: 'venueId'});
     }
   }
   Event.init({
