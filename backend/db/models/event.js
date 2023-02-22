@@ -27,10 +27,18 @@ module.exports = (sequelize, DataTypes) => {
     venueId: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: 'Venues',
+        key: 'id'
+      }
     },
     groupId: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: 'Groups',
+        key: 'id'
+      }
     },
     name: {
       type: DataTypes.STRING,
