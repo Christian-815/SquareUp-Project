@@ -11,12 +11,30 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Membership.belongsTo(models.Group, { foreignKey: 'groupId' });
+      Membership.belongsTo(models.User, { foreignKey: 'userId' });
     }
   }
   Membership.init({
-    userId: DataTypes.INTEGER,
-    groupId: DataTypes.INTEGER,
-    status: DataTypes.ENUM
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    groupId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    status: {
+      type: DataTypes.ENUM,
+      allowNull: false,
+      validate: {
+        validType(value) {
+          if (value !== 'co-host' || value !== "member" || value !== 'pending') {
+            throw new Error("Type must be co-host, member, or pending")
+          }
+        }
+      }
+    }
   }, {
     sequelize,
     modelName: 'Membership',

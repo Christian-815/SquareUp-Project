@@ -11,12 +11,30 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Attendance.belongsTo(models.Event, {foreignKey: 'eventId'});
+      Attendance.belongsTo(models.User, {foreignKey: 'userId'});
     }
   }
   Attendance.init({
-    eventId: DataTypes.INTEGER,
-    userId: DataTypes.INTEGER,
-    status: DataTypes.ENUM
+    eventId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    status: {
+      type: DataTypes.ENUM,
+      allowNull: false,
+      validate: {
+        validType(value) {
+          if (value !== 'waitlist' || value !== "member" || value !== 'pending') {
+            throw new Error("Type must be waitlist, member, or pending")
+          }
+        }
+      }
+    }
   }, {
     sequelize,
     modelName: 'Attendance',

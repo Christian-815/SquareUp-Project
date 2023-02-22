@@ -11,15 +11,63 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Venue.belongsToMany(models.Group, { through: models.Event });
+      Venue.belongsTo(models.Group, {foreignKey: 'groupId'});
+
     }
   }
   Venue.init({
-    groupId: DataTypes.INTEGER,
-    address: DataTypes.STRING,
-    city: DataTypes.STRING,
-    state: DataTypes.STRING,
-    lat: DataTypes.DECIMAL,
-    lng: DataTypes.DECIMAL
+    groupId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    address: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        checkInput(value) {
+          if (!value) {
+            throw new Error("Street address is required")
+          }
+        }
+      }
+    },
+    city: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        checkInput(value) {
+          if (!value) {
+            throw new Error("City is required")
+          }
+        }
+      }
+    },
+    state: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        checkInput(value) {
+          if (!value) {
+            throw new Error("State is required")
+          }
+        }
+      }
+    },
+    lat: {
+      type: DataTypes.DECIMAL,
+      allowNull: false,
+      validate: {
+        isDecimal: true
+      }
+    },
+    lng: {
+      type: DataTypes.DECIMAL,
+      allowNull: false,
+      validate: {
+        isDecimal: true
+      }
+    }
   }, {
     sequelize,
     modelName: 'Venue',
