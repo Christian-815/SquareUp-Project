@@ -27,6 +27,12 @@ module.exports = (sequelize, DataTypes) => {
           }
         }
       });
+      // if (!user) {
+      //   return res.status(401).json({
+      //     "message": "Invalid Credentials",
+      //     "statusCode": 401
+      //   })
+      // }
       if (user && user.validatePassword(password)) {
         return await User.scope('currentUser').findByPk(user.id);
       }
@@ -108,7 +114,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       scopes: {
         currentUser: {
-          attributes: { exclude: ["hashedPassword"] }
+          attributes: { exclude: ["hashedPassword", 'createdAt', 'updatedAt'] }
         },
         loginUser: {
           attributes: {}
