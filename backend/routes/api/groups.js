@@ -1,11 +1,41 @@
 const express = require('express');
 const router = express.Router();
 const { Group, Membership, GroupImage, User, Venue } = require('../../db/models');
-const { Op } = require('sequelize')
+const { Op } = require('sequelize');
+const { check } = require('express-validator');
+const { handleValidationErrors } = require('../../utils/validation');
+
+const validateNewGroup = [
+    check('name')
+        .exists({ checkFalsy: true })
+        .withMessage("Name is required"),
+    check('name')
+        .isLength({ max: 60 })
+        .withMessage("Name must be 60 characters or less"),
+    check('about')
+        .exists({ checkFalsy: true })
+        .isLength({ min: 50 })
+        .withMessage("About must be 50 characters or more"),
+    check('type')
+        .exists({ checkFalsy: true })
+        .isIn(['Online', 'In person'])
+        .withMessage("Type must be 'Online' or 'In person'"),
+    check('private')
+        .exists({ checkFalsy: true })
+        .isBoolean()
+        .withMessage("Private must be a boolean"),
+    check('city')
+        .exists({ checkFalsy: true})
+        .withMessage("City is required"),
+    check('state')
+        .exists({ checkFalsy: true })
+        .withMessage("State is required"),
+    handleValidationErrors
+]
 
 
-router.get('/', async (req,res) => {
-    const groups = await Group.findAll({raw: true});
+router.get('/', async (req, res) => {
+    const groups = await Group.findAll({ raw: true });
     // console.log(allGroups)
 
     for (let group of groups) {
@@ -21,8 +51,8 @@ router.get('/', async (req,res) => {
         const previewImage = await GroupImage.findOne({
             where: {
                 [Op.and]: [
-                    {groupId: group.id},
-                    {preview: true}
+                    { groupId: group.id },
+                    { preview: true }
                 ]
             }
         })
@@ -38,10 +68,15 @@ router.get('/', async (req,res) => {
     })
 });
 
-router.get('/current', async (req,res) => {
-    const {user} = req;
+router.get('/current', async (req, res) => {
+    const { user } = req;
     // console.log(user.dataValues.id)
-    if (!user) { res.json({ Message: "Currently no user logged in" })}
+    if (!user) {
+        return res.status(401).json({
+            message: "Authentication required",
+            statusCode: 401
+        })
+    }
     currentUser = user.dataValues.id
 
     const groups = await Group.findAll({
@@ -81,11 +116,11 @@ router.get('/current', async (req,res) => {
     })
 });
 
-router.get('/:groupId', async (req,res) => {
+router.get('/:groupId', async (req, res) => {
 
-    const group = await Group.findByPk(req.params.groupId, {raw:true});
+    const group = await Group.findByPk(req.params.groupId, { raw: true });
 
-    if(!group) {
+    if (!group) {
         return res.status(404).json({
             message: "Group couldn't be found",
             statusCode: 404
@@ -116,6 +151,50 @@ router.get('/:groupId', async (req,res) => {
 
 
     return res.json(group)
+});
+
+
+router.post('/', validateNewGroup, async (req, res) => {
+    const user = req.user;
+    if (!user) {
+        return res.status(401).json({
+            message: "Authentication required",
+            statusCode: 401
+        })
+    };
+    // console.log(user)
+    const currentUser = user.dataValues.id;
+    // console.log(currentUser)
+
+    const { name, about, type, private, city, state } = req.body;
+
+    const group = await Group.create({
+        organizerId: currentUser,
+        name,
+        about,
+        type,
+        private,
+        city,
+        state
+    });
+
+
+    return res.status(201).json(group)
+
+
+}, async (err, req, res, next) => {
+    if (err.errors) {
+        err.status = 400;
+        err.message = "Validation Error";
+        delete err.title
+
+        return res.status(400).json({
+            message: err.message,
+            statusCode: err.status,
+            error: err.errors
+        })
+    };
+
 })
 
 
