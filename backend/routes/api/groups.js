@@ -195,7 +195,41 @@ router.post('/', validateNewGroup, async (req, res) => {
         })
     };
 
-})
+});
+
+router.post('/:groupId/images', async (req,res) => {
+    const user = req.user.dataValues.id
+    const group = await Group.findByPk(req.params.groupId);
+    if (!group) {
+        return res.status(404).json({
+            message: "Group couldn't be found",
+            statusCode: 404
+        })
+    };
+    if (user !== group.organizerId) {
+        return res.status(403).json({
+            message: "Forbidden",
+            statusCode: 403
+        })
+    };
+
+    const { url, preview } = req.body
+
+    const newGroupImage = await GroupImage.create({
+        groupId: group.id,
+        url,
+        preview
+    });
+
+    return res.status(200).json({
+        id: newGroupImage.id,
+        url: newGroupImage.url,
+        preview: newGroupImage.preview
+    });
+
+});
+
+
 
 
 
