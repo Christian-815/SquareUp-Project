@@ -11,29 +11,28 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // connecting groups to venue
-      Group.belongsToMany(models.Venue, {through: models.Event});
+      Group.hasMany(models.Event, {
+        foreignKey: 'groupId',
+        onDelete: 'CASCADE'
+      });
       // Assigning an owner to each group
-      Group.belongsTo(models.User, {foreignKey: 'organizerId'});
-      // populating groups with users
-      Group.belongsToMany(models.User, {through: models.Membership});
+      Group.hasMany(models.Membership, {
+        foreignKey: 'groupId',
+        onDelete: 'CASCADE'
+      });
       // images for group
       Group.hasMany(models.GroupImage, {
         foreignKey: 'groupId',
-        onDelete: 'CASCADE',
-        hooks: true
+        onDelete: 'CASCADE'
       });
-
       Group.hasMany(models.Venue, {foreignKey: 'groupId'});
+      Group.belongsTo(models.User, {foreignKey: 'organizerId'});
     }
   }
   Group.init({
     organizerId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'Users',
-        key: 'id'
-      }
+      allowNull: false
     },
     name: {
       type: DataTypes.STRING,

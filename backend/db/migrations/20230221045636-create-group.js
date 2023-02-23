@@ -18,14 +18,18 @@ module.exports = {
       },
       organizerId: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        references: {
+          model: 'Users'
+        },
+        onDelete: 'CASCADE'
       },
       name: {
         type: Sequelize.STRING(60),
         allowNull: false
       },
       about: {
-        type: Sequelize.TEXT(300),
+        type: Sequelize.TEXT,
         allowNull: false
       },
       type: {

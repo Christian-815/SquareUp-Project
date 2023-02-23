@@ -31,7 +31,8 @@ module.exports = (sequelize, DataTypes) => {
       references: {
         model: 'Users',
         key: 'id'
-      }
+      },
+      onDelete: "cascade"
     },
     status: {
       type: DataTypes.ENUM("member", "waitlist", "pending"),
