@@ -13,11 +13,13 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       // Event.belongsTo(models.Group, {foreignKey: 'groupId'});
       // Event.belongsTo(models.Venue, {foreignKey: 'venueId'});
-      Event.hasMany(models.Attendance, {foreignKey: 'eventId'});
+      Event.hasMany(models.Attendance, {
+        foreignKey: 'eventId',
+        onDelete: "cascade"
+      });
       Event.hasMany(models.EventImage, {
         foreignKey: 'eventId',
-        onDelete: 'CASCADE',
-        hooks: true
+        onDelete: 'cascade'
       });
       Event.belongsTo(models.Group, {foreignKey: 'groupId'});
       Event.belongsTo(models.Venue, {foreignKey: 'venueId'});
@@ -27,10 +29,18 @@ module.exports = (sequelize, DataTypes) => {
     venueId: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: 'Venues',
+        key: 'id'
+      }
     },
     groupId: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: 'Groups',
+        key: 'id'
+      }
     },
     name: {
       type: DataTypes.STRING,
