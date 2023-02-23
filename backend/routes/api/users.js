@@ -65,7 +65,7 @@ router.post(
             err.status = 403;
             err.message = "User already exists";
             delete err.title
-            // console.log('///////////////////////////////////////////////////////')
+    
             return res.status(403).json({
                 message: err.message,
                 statusCode: err.status,
