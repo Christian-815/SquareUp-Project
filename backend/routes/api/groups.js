@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Group, Membership, GroupImage } = require('../../db/models');
+const { Group, Membership, GroupImage, User, Venue } = require('../../db/models');
 const { Op } = require('sequelize')
 
 
@@ -41,6 +41,7 @@ router.get('/', async (req,res) => {
 router.get('/current', async (req,res) => {
     const {user} = req;
     // console.log(user.dataValues.id)
+    if (!user) { res.json({ Message: "Currently no user logged in" })}
     currentUser = user.dataValues.id
 
     const groups = await Group.findAll({
@@ -78,6 +79,43 @@ router.get('/current', async (req,res) => {
     return res.json({
         Groups: groups
     })
+});
+
+router.get('/:groupId', async (req,res) => {
+
+    const group = await Group.findByPk(req.params.groupId, {raw:true});
+
+    if(!group) {
+        return res.status(404).json({
+            message: "Group couldn't be found",
+            statusCode: 404
+        })
+    }
+
+    group.numMembers = await Membership.count({
+        where: {
+            groupId: req.params.groupId
+        }
+    });
+
+    group.GroupImages = await GroupImage.scope('currentGroup').findAll({
+        where: {
+            groupId: req.params.groupId
+        }
+    });
+
+    group.Organizer = await User.findByPk(group.organizerId, {
+        attributes: ['id', 'firstName', 'lastName']
+    });
+
+    group.Venues = await Venue.findAll({
+        where: {
+            groupId: req.params.groupId
+        }
+    });
+
+
+    return res.json(group)
 })
 
 
