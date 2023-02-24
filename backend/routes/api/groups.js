@@ -54,6 +54,29 @@ const validateNewVenue = [
     handleValidationErrors
 ];
 
+const validateNewEvent = [
+    check('name')
+        .exists({ checkFalsy: true })
+        .isLength({ min: 5 })
+        .withMessage("Name must be at least 5 characters"),
+    check('type')
+        .exists({ checkFalsy: true })
+        .isIn(['Online', 'In person'])
+        .withMessage("Type must be Online or In person"),
+    check('capacity')
+        .exists({ checkFalsy: true })
+        .isInt()
+        .withMessage("Capacity must be an integer"),
+    check('price')
+        .exists({ checkFalsy: true })
+        .isDecimal({ force_decimal: true })
+        .withMessage("Price is invalid"),
+    check('description')
+        .exists({ checkFalsy: true })
+        .withMessage("Description is required"),
+    handleValidationErrors
+];
+
 
 router.get('/', async (req, res) => {
     const groups = await Group.findAll({ raw: true });
@@ -491,6 +514,114 @@ router.get('/:groupId/events', async (req, res) => {
     return res.status(200).json({
         Events: events
     })
+});
+
+router.post('/:groupId/events', validateNewEvent, async (req,res) => {
+    const user = req.user.dataValues
+    const group = await Group.findByPk(req.params.groupId);
+    if (!group) {
+        return res.status(404).json({
+            message: "Group couldn't be found",
+            statusCode: 404
+        })
+    };
+
+    const userGroupRelationship = await Membership.findOne({
+        where: {
+            [Op.and]: [
+                { userId: user.id },
+                { groupId: group.id }
+            ]
+        },
+        raw: true
+    });
+
+    if (user.id !== group.organizerId || !userGroupRelationship || userGroupRelationship.status !== 'co-host') {
+        return res.status(403).json({
+            message: "Forbidden",
+            statusCode: 403
+        })
+    };
+
+    const { venueId, name, type, capacity, price, description, startDate, endDate } = req.body;
+
+    const checkVenueExist = await Venue.findByPk(venueId);
+
+    if (!checkVenueExist) {
+        return res.status(400).json({
+            message: "Validation error",
+            statusCode: 400,
+            errors: {
+                venueId: "Venue does not exist"
+            }
+        })
+    };
+
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const today = new Date();
+    console.log(startDate, endDate)
+    // const betterFormat = start.toDateString()
+
+    if (start.getTime() < today.getTime()) {
+        return res.status(400).json({
+            message: "Validation error",
+            statusCode: 400,
+            errors: {
+                startDate: "Start date must be in the future"
+            }
+        })
+    };
+
+    if (start.getTime() > end.getTime()) {
+        return res.status(400).json({
+            message: "Validation error",
+            statusCode: 400,
+            errors: {
+                endDate: "End date is less than start date"
+            }
+        })
+    };
+
+
+    const newGroupEvent = await Event.create({
+        groupId: group.id,
+        venueId,
+        name,
+        type,
+        capacity,
+        price,
+        description,
+        startDate,
+        endDate
+    });
+
+    return res.status(200).json({
+        id: newGroupEvent.id,
+        groupId: newGroupEvent.groupId,
+        venueId: newGroupEvent.venueId,
+        name: newGroupEvent.name,
+        type: newGroupEvent.type,
+        capacity: newGroupEvent.capacity,
+        price: newGroupEvent.price,
+        description: newGroupEvent.description,
+        startDate: newGroupEvent.startDate,
+        endDate: newGroupEvent.endDate
+    });
+    
+}, async (err, req, res, next) => {
+    if (err.errors) {
+        err.status = 400;
+        err.message = "Validation Error";
+        delete err.title
+
+        return res.status(400).json({
+            message: err.message,
+            statusCode: err.status,
+            errors: err.errors
+        })
+    };
+
 })
 
 

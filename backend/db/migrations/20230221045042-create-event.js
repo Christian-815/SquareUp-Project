@@ -56,6 +56,7 @@ module.exports = {
       },
       price: {
         type: Sequelize.INTEGER,
+        type: Sequelize.FLOAT,
         allowNull: false,
 
       },
