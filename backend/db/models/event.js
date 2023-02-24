@@ -45,9 +45,9 @@ module.exports = (sequelize, DataTypes) => {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
-      validate: {
-        len: [5, 30]
-      }
+      // validate: {
+      //   len: [5, 30]
+      // }
     },
     description: {
       type: DataTypes.TEXT,
@@ -58,7 +58,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         validType(value) {
-          if (value !== 'Online' || value !== "In person") {
+          if (value !== 'Online' && value !== "In person") {
             throw new Error("Type must be Online or In person")
           }
         }
@@ -70,7 +70,7 @@ module.exports = (sequelize, DataTypes) => {
 
     },
     price: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DECIMAL,
       allowNull: false,
 
     },
