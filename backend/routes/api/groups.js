@@ -230,6 +230,50 @@ router.post('/:groupId/images', async (req,res) => {
 });
 
 
+router.put('/:groupId', validateNewGroup, async (req,res) => {
+    const user = req.user.dataValues.id
+    const group = await Group.findByPk(req.params.groupId);
+    if (!group) {
+        return res.status(404).json({
+            message: "Group couldn't be found",
+            statusCode: 404
+        })
+    };
+    if (user !== group.organizerId) {
+        return res.status(403).json({
+            message: "Forbidden",
+            statusCode: 403
+        })
+    };
+
+    const { name, about, type, private, city, state } = req.body;
+
+    group.update({
+        name: name,
+        about: about,
+        type: type,
+        private: private,
+        city: city,
+        state: state
+    });
+
+
+    return res.status(200).json(group)
+}, async (err, req, res, next) => {
+    if (err.errors) {
+        err.status = 400;
+        err.message = "Validation Error";
+        delete err.title
+
+        return res.status(400).json({
+            message: err.message,
+            statusCode: err.status,
+            error: err.errors
+        })
+    };
+
+});
+
 
 
 
