@@ -31,7 +31,28 @@ const validateNewGroup = [
         .exists({ checkFalsy: true })
         .withMessage("State is required"),
     handleValidationErrors
-]
+];
+
+const validateNewVenue = [
+    check('address')
+        .exists({ checkFalsy: true })
+        .withMessage('Street address is required'),
+    check('city')
+        .exists({ checkFalsy: true })
+        .withMessage('City is required'),
+    check('state')
+        .exists({ checkFalsy: true })
+        .withMessage('State is required'),
+    check('lat')
+        .exists({ checkFalsy: true })
+        .isDecimal()
+        .withMessage('Latitude is not valid'),
+    check('lng')
+        .exists({ checkFalsy: true })
+        .isDecimal()
+        .withMessage('Longitude is not valid'),
+    handleValidationErrors
+];
 
 
 router.get('/', async (req, res) => {
@@ -319,7 +340,6 @@ router.get('/:groupId/venues', async (req,res) => {
         },
         raw: true
     });
-    // console.log(userGroupRelationship)
 
     if (user.id !== group.organizerId || !userGroupRelationship || userGroupRelationship.status !== 'co-host') {
         return res.status(403).json({
@@ -338,6 +358,68 @@ router.get('/:groupId/venues', async (req,res) => {
     return res.status(200).json({
         Venues: groupVenues
     });
+
+});
+
+router.post('/:groupId/venues', validateNewVenue, async (req,res) => {
+    const user = req.user.dataValues
+    const group = await Group.findByPk(req.params.groupId);
+    if (!group) {
+        return res.status(404).json({
+            message: "Group couldn't be found",
+            statusCode: 404
+        })
+    };
+
+    const userGroupRelationship = await Membership.findOne({
+        where: {
+            [Op.and]: [
+                { userId: user.id },
+                { groupId: group.id }
+            ]
+        },
+        raw: true
+    });
+
+    if (user.id !== group.organizerId || !userGroupRelationship || userGroupRelationship.status !== 'co-host') {
+        return res.status(403).json({
+            message: "Forbidden",
+            statusCode: 403
+        })
+    };
+
+    const { address, city, state, lat, lng } = req.body
+
+    const newVenue = await Venue.create({
+        groupId: group.id,
+        address,
+        city,
+        state,
+        lat,
+        lng
+    });
+
+    return res.status(200).json({
+        id: newVenue.id,
+        groupId: newVenue.groupId,
+        address: newVenue.address,
+        city: newVenue.city,
+        state: newVenue.city,
+        lat: newVenue.lat,
+        lng: newVenue.lng
+    })
+}, async (err, req, res, next) => {
+    if (err.errors) {
+        err.status = 400;
+        err.message = "Validation Error";
+        delete err.title
+
+        return res.status(400).json({
+            message: err.message,
+            statusCode: err.status,
+            errors: err.errors
+        })
+    };
 
 })
 
