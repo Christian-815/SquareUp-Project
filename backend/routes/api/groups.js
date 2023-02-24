@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Group, Membership, GroupImage, User, Venue } = require('../../db/models');
+const { Group, Membership, GroupImage, User, Venue, Event, Attendance, EventImage } = require('../../db/models');
 const { Op } = require('sequelize');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
@@ -25,7 +25,7 @@ const validateNewGroup = [
         .isBoolean()
         .withMessage("Private must be a boolean"),
     check('city')
-        .exists({ checkFalsy: true})
+        .exists({ checkFalsy: true })
         .withMessage("City is required"),
     check('state')
         .exists({ checkFalsy: true })
@@ -45,11 +45,11 @@ const validateNewVenue = [
         .withMessage('State is required'),
     check('lat')
         .exists({ checkFalsy: true })
-        .isDecimal({force_decimal: true})
+        .isDecimal({ force_decimal: true })
         .withMessage('Latitude is not valid'),
     check('lng')
         .exists({ checkFalsy: true })
-        .isDecimal({force_decimal: true})
+        .isDecimal({ force_decimal: true })
         .withMessage('Longitude is not valid'),
     handleValidationErrors
 ];
@@ -220,7 +220,7 @@ router.post('/', validateNewGroup, async (req, res) => {
 
 });
 
-router.post('/:groupId/images', async (req,res) => {
+router.post('/:groupId/images', async (req, res) => {
     const user = req.user.dataValues.id
     const group = await Group.findByPk(req.params.groupId);
     if (!group) {
@@ -253,7 +253,7 @@ router.post('/:groupId/images', async (req,res) => {
 });
 
 
-router.put('/:groupId', validateNewGroup, async (req,res) => {
+router.put('/:groupId', validateNewGroup, async (req, res) => {
     const user = req.user.dataValues.id
     const group = await Group.findByPk(req.params.groupId);
     if (!group) {
@@ -297,7 +297,7 @@ router.put('/:groupId', validateNewGroup, async (req,res) => {
 
 });
 
-router.delete('/:groupId', async (req,res) => {
+router.delete('/:groupId', async (req, res) => {
     const user = req.user.dataValues.id
     const group = await Group.findByPk(req.params.groupId);
     if (!group) {
@@ -321,7 +321,7 @@ router.delete('/:groupId', async (req,res) => {
     });
 });
 
-router.get('/:groupId/venues', async (req,res) => {
+router.get('/:groupId/venues', async (req, res) => {
     const user = req.user.dataValues
     const group = await Group.findByPk(req.params.groupId);
     if (!group) {
@@ -334,8 +334,8 @@ router.get('/:groupId/venues', async (req,res) => {
     const userGroupRelationship = await Membership.findOne({
         where: {
             [Op.and]: [
-                {userId: user.id},
-                {groupId: group.id}
+                { userId: user.id },
+                { groupId: group.id }
             ]
         },
         raw: true
@@ -361,7 +361,7 @@ router.get('/:groupId/venues', async (req,res) => {
 
 });
 
-router.post('/:groupId/venues', validateNewVenue, async (req,res) => {
+router.post('/:groupId/venues', validateNewVenue, async (req, res) => {
     const user = req.user.dataValues
     const group = await Group.findByPk(req.params.groupId);
     if (!group) {
@@ -421,6 +421,76 @@ router.post('/:groupId/venues', validateNewVenue, async (req,res) => {
         })
     };
 
+});
+
+router.get('/:groupId/events', async (req, res) => {
+    const group = await Group.findByPk(req.params.groupId, {
+        attributes: ['id', 'name', 'city', 'state']
+    });
+    if (!group) {
+        return res.status(404).json({
+            message: "Group couldn't be found",
+            statusCode: 404
+        })
+    };
+
+    const events = await Event.findAll({
+        attributes: {
+            exclude: ['description', 'capacity', 'price', 'createdAt', 'updatedAt']
+        },
+        where: {
+            groupId: group.id
+        },
+        raw: true
+    });
+
+    for (let event of events) {
+        const attendees = await Attendance.count({
+            where: {
+                eventId: event.id
+            }
+        });
+
+        event.numAttending = attendees
+    };
+
+    for (let event of events) {
+        const previewImage = await EventImage.findOne({
+            where: {
+                [Op.and]: [
+                    { eventId: event.id },
+                    { preview: true }
+                ]
+            },
+            raw: true
+        })
+        if (!previewImage) {
+            event.previewImage = "No preview Image available for this event."
+        } else {
+            event.previewImage = previewImage.url
+        }
+    };
+
+    for (let event of events) {
+        event.Group = group;
+
+        const eventVenue = await Venue.findOne({
+            attributes: ['id', 'city', 'state'],
+            where: {
+                id: event.venueId
+            }
+        });
+
+        if (!eventVenue) {
+            event.Venue = null
+        } else {
+            event.Venue = eventVenue
+        }
+    };
+
+    return res.status(200).json({
+        Events: events
+    })
 })
 
 
