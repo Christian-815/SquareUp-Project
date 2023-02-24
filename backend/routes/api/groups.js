@@ -45,11 +45,11 @@ const validateNewVenue = [
         .withMessage('State is required'),
     check('lat')
         .exists({ checkFalsy: true })
-        .isDecimal()
+        .isDecimal({force_decimal: true})
         .withMessage('Latitude is not valid'),
     check('lng')
         .exists({ checkFalsy: true })
-        .isDecimal()
+        .isDecimal({force_decimal: true})
         .withMessage('Longitude is not valid'),
     handleValidationErrors
 ];
