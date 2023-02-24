@@ -300,7 +300,46 @@ router.delete('/:groupId', async (req,res) => {
     });
 });
 
+router.get('/:groupId/venues', async (req,res) => {
+    const user = req.user.dataValues
+    const group = await Group.findByPk(req.params.groupId);
+    if (!group) {
+        return res.status(404).json({
+            message: "Group couldn't be found",
+            statusCode: 404
+        })
+    };
 
+    const userGroupRelationship = await Membership.findOne({
+        where: {
+            [Op.and]: [
+                {userId: user.id},
+                {groupId: group.id}
+            ]
+        },
+        raw: true
+    });
+    // console.log(userGroupRelationship)
+
+    if (user.id !== group.organizerId || !userGroupRelationship || userGroupRelationship.status !== 'co-host') {
+        return res.status(403).json({
+            message: "Forbidden",
+            statusCode: 403
+        })
+    };
+
+    const groupVenues = await Venue.findAll({
+        where: {
+            groupId: group.id
+        },
+        raw: true
+    });
+
+    return res.status(200).json({
+        Venues: groupVenues
+    });
+
+})
 
 
 module.exports = router;
