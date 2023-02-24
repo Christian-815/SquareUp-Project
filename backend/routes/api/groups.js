@@ -54,13 +54,15 @@ router.get('/', async (req, res) => {
                     { groupId: group.id },
                     { preview: true }
                 ]
-            }
+            },
+            raw: true
         })
         if (!previewImage) {
             group.previewImage = "No preview Image available for this group."
+        } else {
+            group.previewImage = previewImage.url
         }
-        // console.log(previewImage)
-        group.previewImage = previewImage.dataValues.url
+
     }
 
     return res.json({
@@ -106,9 +108,9 @@ router.get('/current', async (req, res) => {
         })
         if (!previewImage) {
             group.previewImage = "No preview Image available for this group."
+        } else {
+            group.previewImage = previewImage.dataValues.url
         }
-        // console.log(previewImage)
-        group.previewImage = previewImage.dataValues.url
     }
 
     return res.json({
@@ -272,6 +274,30 @@ router.put('/:groupId', validateNewGroup, async (req,res) => {
         })
     };
 
+});
+
+router.delete('/:groupId', async (req,res) => {
+    const user = req.user.dataValues.id
+    const group = await Group.findByPk(req.params.groupId);
+    if (!group) {
+        return res.status(404).json({
+            message: "Group couldn't be found",
+            statusCode: 404
+        })
+    };
+    if (user !== group.organizerId) {
+        return res.status(403).json({
+            message: "Forbidden",
+            statusCode: 403
+        })
+    };
+
+    await group.destroy();
+
+    return res.status(200).json({
+        message: "Successfully deleted",
+        statusCode: 200
+    });
 });
 
 
