@@ -35,12 +35,12 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: "cascade"
     },
     status: {
-      type: DataTypes.ENUM("member", "waitlist", "pending"),
+      type: DataTypes.ENUM("member", "waitlist", "pending", "attending"),
       allowNull: false,
       validate: {
         validType(value) {
-          if (value !== 'waitlist' || value !== "member" || value !== 'pending') {
-            throw new Error("Type must be waitlist, member, or pending")
+          if (value !== 'waitlist' && value !== "member" && value !== 'pending' && value !== 'attending') {
+            throw new Error("Type must be waitlist, member, pending, or attending")
           }
         }
       }

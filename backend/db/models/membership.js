@@ -37,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         validType(value) {
-          if (value !== 'co-host' || value !== "member" || value !== 'pending') {
+          if (value !== 'co-host' && value !== "member" && value !== 'pending') {
             throw new Error("Type must be co-host, member, or pending")
           }
         }

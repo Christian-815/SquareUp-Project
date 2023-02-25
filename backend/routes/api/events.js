@@ -131,6 +131,95 @@ router.get('/:eventId', async (req, res) => {
     return res.status(200).json({
         Events: event
     })
+});
+
+router.post('/:eventId/images', async (req, res) => {
+    const user = req.user.dataValues;
+    if (!user) {
+        return res.status(401).json({
+            message: "Authentication required",
+            statusCode: 401
+        })
+    };
+
+    const event = await Event.findByPk(req.params.eventId, {
+        attributes: {
+            exclude: ['createdAt', 'updatedAt']
+        },
+        raw: true
+    });
+    if(!event) {
+        return res.status(404).json({
+            message: "Event couldn't be found",
+            statusCode: 404
+        })
+    };
+    // User is an attendee
+    const userAttendee = await Attendance.findOne({
+        where: {
+            [Op.and]: [
+                {eventId: event.id},
+                {userId: user.id}
+            ],
+            [Op.or]: [
+                {status: 'attending'},
+                {status: 'member'}
+            ]
+        }
+    });
+
+    if (userAttendee) {
+        const {url, preview} = req.body;
+
+        const newEventImage = await EventImage.create({
+            eventId: event.id,
+            url,
+            preview
+        });
+
+        return res.status(200).json({
+            id: newEventImage.id,
+            url: newEventImage.url,
+            preview: newEventImage.preview
+        })
+    } else {
+        // User is co-host
+        const eventGroup = await Group.findByPk(event.groupId);
+        const userGroupRelationship = await Membership.findOne({
+            where: {
+                [Op.and]: [
+                    { userId: user.id },
+                    { groupId: eventGroup.id },
+                    { status: 'co-host'}
+                ]
+            },
+            raw: true
+        });
+
+
+        if (!userGroupRelationship || eventGroup.organizerId !== user.id) {
+            return res.status(403).json({
+                message: "Forbidden",
+                statusCode: 403
+            })
+        };
+
+        const { url, preview } = req.body;
+
+        const newEventImage = await EventImage.create({
+            eventId: event.id,
+            url,
+            preview
+        });
+
+        return res.status(200).json({
+            id: newEventImage.id,
+            url: newEventImage.url,
+            preview: newEventImage.preview
+        });
+
+    }
+
 })
 
 
