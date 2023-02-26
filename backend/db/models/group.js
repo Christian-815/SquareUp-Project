@@ -13,17 +13,20 @@ module.exports = (sequelize, DataTypes) => {
       // connecting groups to venue
       Group.hasMany(models.Event, {
         foreignKey: 'groupId',
-        onDelete: 'CASCADE'
+        onDelete: 'CASCADE',
+        hooks: true
       });
       // Assigning an owner to each group
       Group.hasMany(models.Membership, {
         foreignKey: 'groupId',
-        onDelete: 'CASCADE'
+        onDelete: 'CASCADE',
+        hooks: true
       });
       // images for group
       Group.hasMany(models.GroupImage, {
         foreignKey: 'groupId',
-        onDelete: 'CASCADE'
+        onDelete: 'CASCADE',
+        hooks: true
       });
       Group.hasMany(models.Venue, {foreignKey: 'groupId'});
       Group.belongsTo(models.User, {foreignKey: 'organizerId'});
