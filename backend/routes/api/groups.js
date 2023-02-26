@@ -769,6 +769,100 @@ router.post('/:groupId/membership', async (req,res) => {
         status: newMember.status
     })
 
+});
+
+router.put('/:groupId/membership', async (req, res) => {
+    const user = req.user.dataValues;
+    if (!user) {
+        return res.status(401).json({
+            message: "Authentication required",
+            statusCode: 401
+        })
+    };
+    const group = await Group.findByPk(req.params.groupId);
+    if (!group) {
+        return res.status(404).json({
+            message: "Group couldn't be found",
+            statusCode: 404
+        })
+    };
+
+    const { memberId, status } = req.body;
+
+    const member = await Membership.findOne({
+        where: {
+            userId: memberId
+        }
+    });
+
+    if (!member) {
+        return res.status(400).json({
+            "message": "Validation Error",
+            "statusCode": 400,
+            "errors": {
+                "memberId": "User couldn't be found"
+            }
+        })
+    };
+
+    if (member.groupId !== group.id) {
+        return res.status(404).json({
+            "message": "Membership between the user and the group does not exists",
+            "statusCode": 404
+        })
+    };
+
+    if (status === 'pending') {
+        return res.status(400).json({
+            message: "Validation Error",
+            statusCode: 400,
+            errors: {
+                status: "Cannot change a membership status to pending"
+            }
+        });
+    }
+
+    if (status === 'member') {
+        const userGroupRelationship = await Membership.findOne({
+            where: {
+                [Op.and]: [
+                    {userId: user.id},
+                    {groupId: group.id},
+                    {status: 'co-host'}
+                ]
+            }
+        });
+
+        if (!userGroupRelationship && group.organizerId !== user.id) {
+            return res.status(403).json({
+                message: "Forbidden",
+                statusCode: 403
+            })
+        };
+
+        member.update({
+            status: 'member'
+        });
+
+        return res.status(200).json(member)
+
+    };
+
+    if (status === 'co-host') {
+        if (group.organizerId !== user.id) {
+            return res.status(403).json({
+                message: "Forbidden",
+                statusCode: 403
+            })
+        };
+
+        member.update({
+            status: 'co-host'
+        });
+
+        return res.status(200).json(member)
+    }
+
 })
 
 
