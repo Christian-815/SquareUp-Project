@@ -621,6 +621,154 @@ router.post('/:groupId/events', validateNewEvent, async (req,res) => {
         })
     };
 
+});
+
+
+router.get('/:groupId/members', async (req,res) => {
+    const user = req.user.dataValues
+    const group = await Group.findByPk(req.params.groupId);
+    if (!group) {
+        return res.status(404).json({
+            message: "Group couldn't be found",
+            statusCode: 404
+        })
+    };
+
+    const userGroupRelationship = await Membership.findOne({
+        where: {
+            [Op.and]: [
+                {groupId: group.id},
+                {userId: user.id},
+                {status: 'co-host'}
+            ]
+        }
+    })
+
+    if (group.organizerId === user.id || userGroupRelationship) {
+        const groupMembers = await Membership.findAll({
+            where: {
+                groupId: group.id
+            },
+            raw: true
+        })
+
+        for (let groupMember of groupMembers) {
+            const groupMemberInfo = await User.findByPk(groupMember.userId, {
+                attributes: ['firstName', 'lastName']
+            });
+            groupMember.firstName = groupMemberInfo.firstName;
+            groupMember.lastName = groupMemberInfo.lastName;
+            groupMember.Membership = {
+                status: groupMember.status
+            };
+
+            delete groupMember.userId;
+            delete groupMember.groupId;
+            delete groupMember.status;
+            delete groupMember.createdAt;
+            delete groupMember.updatedAt;
+        }
+
+        return res.status(200).json({
+            Members: groupMembers
+        })
+    } else {
+        const groupMembers = await Membership.findAll({
+            where: {
+                [Op.and]: [
+                    {groupId: group.id},
+                    {status: {
+                        [Op.not]: "pending"
+                    }}
+                ]
+            },
+            raw: true
+        })
+
+        for (let groupMember of groupMembers) {
+            const groupMemberInfo = await User.findByPk(groupMember.userId, {
+                attributes: ['firstName', 'lastName']
+            });
+            groupMember.firstName = groupMemberInfo.firstName;
+            groupMember.lastName = groupMemberInfo.lastName;
+            groupMember.Membership = {
+                status: groupMember.status
+            };
+
+            delete groupMember.userId;
+            delete groupMember.groupId;
+            delete groupMember.status;
+            delete groupMember.createdAt;
+            delete groupMember.updatedAt;
+        }
+
+        return res.status(200).json({
+            Members: groupMembers
+        })
+    }
+});
+
+router.post('/:groupId/membership', async (req,res) => {
+    const user = req.user.dataValues;
+    if (!user) {
+        return res.status(401).json({
+            message: "Authentication required",
+            statusCode: 401
+        })
+    };
+    const group = await Group.findByPk(req.params.groupId);
+    if (!group) {
+        return res.status(404).json({
+            message: "Group couldn't be found",
+            statusCode: 404
+        })
+    };
+
+    const userGroupRelationshipPending = await Membership.findOne({
+        where: {
+            [Op.and]: [
+                {userId: user.id},
+                {groupId: group.id},
+                {status: 'pending'}
+            ]
+        }
+    });
+
+    if (userGroupRelationshipPending) {
+        return res.status(400).json({
+            message: "Membership has already been requested",
+            statusCode: 400
+        })
+    } else {
+        const userGroupRelationshipMember = await Membership.findOne({
+            where: {
+                [Op.and]: [
+                    { userId: user.id },
+                    { groupId: group.id }
+                ]
+            }
+        });
+
+        if (userGroupRelationshipMember) {
+            return res.status(200).json({
+                message: "User is already a member of the group",
+                statusCode: 400
+            })
+        }
+    };
+
+
+    const newMember = await Membership.create({
+        userId: user.id,
+        groupId: group.id,
+        status: 'pending'
+    });
+
+    return res.status(200).json({
+        memberId: newMember.id,
+        status: newMember.status
+    })
+
 })
 
 
