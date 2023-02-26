@@ -560,8 +560,7 @@ router.post('/:groupId/events', validateNewEvent, async (req,res) => {
     const start = new Date(startDate);
     const end = new Date(endDate);
     const today = new Date();
-    console.log(startDate, endDate)
-    // const betterFormat = start.toDateString()
+
 
     if (start.getTime() < today.getTime()) {
         return res.status(400).json({
@@ -608,7 +607,7 @@ router.post('/:groupId/events', validateNewEvent, async (req,res) => {
         startDate: newGroupEvent.startDate,
         endDate: newGroupEvent.endDate
     });
-    
+
 }, async (err, req, res, next) => {
     if (err.errors) {
         err.status = 400;
