@@ -171,7 +171,7 @@ router.post('/:eventId/images', async (req, res) => {
         },
         raw: true
     });
-    if(!event) {
+    if (!event) {
         return res.status(404).json({
             message: "Event couldn't be found",
             statusCode: 404
@@ -181,18 +181,18 @@ router.post('/:eventId/images', async (req, res) => {
     const userAttendee = await Attendance.findOne({
         where: {
             [Op.and]: [
-                {eventId: event.id},
-                {userId: user.id}
+                { eventId: event.id },
+                { userId: user.id }
             ],
             [Op.or]: [
-                {status: 'attending'},
-                {status: 'member'}
+                { status: 'attending' },
+                { status: 'member' }
             ]
         }
     });
 
     if (userAttendee) {
-        const {url, preview} = req.body;
+        const { url, preview } = req.body;
 
         const newEventImage = await EventImage.create({
             eventId: event.id,
@@ -213,7 +213,7 @@ router.post('/:eventId/images', async (req, res) => {
                 [Op.and]: [
                     { userId: user.id },
                     { groupId: eventGroup.id },
-                    { status: 'co-host'}
+                    { status: 'co-host' }
                 ]
             },
             raw: true
@@ -246,7 +246,7 @@ router.post('/:eventId/images', async (req, res) => {
 });
 
 
-router.put('/:eventId', validateNewEvent, async (req,res) => {
+router.put('/:eventId', validateNewEvent, async (req, res) => {
     const user = req.user.dataValues;
     if (!user) {
         return res.status(401).json({
@@ -362,7 +362,7 @@ router.put('/:eventId', validateNewEvent, async (req,res) => {
 });
 
 
-router.delete('/:eventId', async (req,res) => {
+router.delete('/:eventId', async (req, res) => {
     const user = req.user.dataValues;
     if (!user) {
         return res.status(401).json({
@@ -396,7 +396,7 @@ router.delete('/:eventId', async (req,res) => {
     });
 
 
-    if (!userGroupRelationship || eventGroup.organizerId !== user.id) {
+    if (!userGroupRelationship && eventGroup.organizerId !== user.id) {
         return res.status(403).json({
             message: "Forbidden",
             statusCode: 403
@@ -409,6 +409,284 @@ router.delete('/:eventId', async (req,res) => {
         message: "Successfully deleted"
     })
 });
+
+
+router.get('/:eventId/attendees', async (req, res) => {
+    const user = req.user.dataValues;
+    const event = await Event.findByPk(req.params.eventId);
+    if (!event) {
+        return res.status(404).json({
+            "message": "Event couldn't be found",
+            "statusCode": 404
+        })
+    };
+
+    const group = await Group.findByPk(event.groupId);
+    const userGroupRelationship = await Membership.findOne({
+        where: {
+            [Op.and]: [
+                { userId: user.id },
+                { groupId: group.id },
+                { status: 'co-host' }
+            ]
+        }
+    });
+
+    if (userGroupRelationship || group.organizerId === user.id) {
+        const attendees = await Attendance.findAll({
+            where: {
+                eventId: event.id
+            },
+            raw: true
+        });
+
+        for (let attendee of attendees) {
+            const attendeeInfo = await User.findByPk(attendee.userId, {
+                attributes: ['firstName', 'lastName']
+            });
+
+            attendee.firstName = attendeeInfo.firstName;
+            attendee.lastName = attendeeInfo.lastName;
+            attendee.Attendace = {
+                status: attendee.status
+            };
+
+        };
+
+        return res.status(200).json({
+            Attendees: attendees
+        });
+
+    } else {
+        const attendees = await Attendance.findAll({
+            where: {
+                [Op.and]: [
+                    { eventId: event.id },
+                    {
+                        status: {
+                            [Op.not]: 'pending'
+                        }
+                    }
+                ]
+            },
+            raw: true
+        });
+
+        for (let attendee of attendees) {
+            const attendeeInfo = await User.findByPk(attendee.userId, {
+                attributes: ['firstName', 'lastName']
+            });
+
+            attendee.firstName = attendeeInfo.firstName;
+            attendee.lastName = attendeeInfo.lastName;
+            attendee.Attendace = {
+                status: attendee.status
+            };
+
+        };
+
+        return res.status(200).json({
+            Attendees: attendees
+        });
+    }
+});
+
+
+router.post('/:eventId/attendance', async (req, res) => {
+    const user = req.user.dataValues;
+    if (!user) {
+        return res.status(401).json({
+            message: "Authentication required",
+            statusCode: 401
+        })
+    };
+    const event = await Event.findByPk(req.params.eventId);
+    if (!event) {
+        return res.status(404).json({
+            "message": "Event couldn't be found",
+            "statusCode": 404
+        })
+    };
+
+    const group = await Group.findByPk(event.groupId);
+    const userGroupRelationship = await Membership.findOne({
+        where: {
+            [Op.and]: [
+                { userId: user.id },
+                { groupId: group.id },
+                {
+                    status: {
+                        [Op.not]: 'pending'
+                    }
+                }
+            ]
+        }
+    });
+
+    if (!userGroupRelationship) {
+        return res.status(403).json({
+            message: "Forbidden",
+            statusCode: 403
+        })
+    };
+
+    const userAttendanceRelationship = await Attendance.findOne({
+        where: {
+            [Op.and]: [
+                { eventId: event.id },
+                { userId: user.id }
+            ]
+        }
+    });
+
+    if (userAttendanceRelationship) {
+        if (userAttendanceRelationship.status === 'member') {
+            return res.status(400).json({
+                "message": "User is already an attendee of the event",
+                "statusCode": 400
+            })
+        } else {
+            return res.status(400).json({
+                "message": "Attendance has already been requested",
+                "statusCode": 400
+            })
+        }
+    } else {
+        const newAttendee = await Attendance.create({
+            eventId: event.id,
+            userId: user.id,
+            status: 'pending'
+        });
+
+        return res.status(200).json({
+            userId: newAttendee.userId,
+            status: newAttendee.status
+        })
+
+    }
+
+});
+
+
+router.put('/:eventId/attendance', async (req, res) => {
+    const user = req.user.dataValues;
+    if (!user) {
+        return res.status(401).json({
+            message: "Authentication required",
+            statusCode: 401
+        })
+    };
+
+    const event = await Event.findByPk(req.params.eventId);
+    if (!event) {
+        return res.status(404).json({
+            "message": "Event couldn't be found",
+            "statusCode": 404
+        })
+    };
+
+    const group = await Group.findByPk(event.groupId);
+    const userGroupRelationship = await Membership.findOne({
+        where: {
+            [Op.and]: [
+                { userId: user.id },
+                { groupId: group.id },
+                { status: 'co-host' }
+            ]
+        }
+    });
+
+    if (!userGroupRelationship && group.organizerId !== user.id) {
+        return res.status(403).json({
+            message: "Forbidden",
+            statusCode: 403
+        })
+    };
+
+    const { userId, status } = req.body;
+
+    const userEventRelationship = await Attendance.findOne({
+        attributes: ['id', 'eventId', 'userId', 'status'],
+        where: {
+            [Op.and]: [
+                { eventId: event.id },
+                { userId: userId }
+            ]
+        }
+    });
+    if (!userEventRelationship) {
+        return res.status(404).json({
+            "message": "Attendance between the user and the event does not exist",
+            "statusCode": 404
+        })
+    };
+
+    if (status === 'pending') {
+        return res.status(400).json({
+            "message": "Cannot change an attendance status to pending",
+            "statusCode": 400
+        })
+    };
+
+    userEventRelationship.update({
+        status: status
+    });
+
+    return res.status(200).json(userEventRelationship)
+
+});
+
+
+router.delete('/:eventId/attendance', async (req, res) => {
+    const user = req.user.dataValues;
+    if (!user) {
+        return res.status(401).json({
+            message: "Authentication required",
+            statusCode: 401
+        })
+    };
+
+    const event = await Event.findByPk(req.params.eventId);
+    if (!event) {
+        return res.status(404).json({
+            "message": "Event couldn't be found",
+            "statusCode": 404
+        })
+    };
+
+    const group = await Group.findByPk(event.groupId);
+    const { userId } = req.body;
+
+    if (user.id !== userId && user.id !== group.organizerId) {
+        return res.status(403).json({
+            "message": "Only the User or organizer may delete an Attendance",
+            "statusCode": 403
+        })
+    }
+
+    const userAttendanceRelationship = await Attendance.findOne({
+        where: {
+            [Op.and]: [
+                { userId: userId },
+                { eventId: event.id }
+            ]
+        }
+    });
+
+    if (!userAttendanceRelationship) {
+        return res.status(404).json({
+            "message": "Attendance does not exist for this User",
+            "statusCode": 404
+        })
+    } else {
+        await userAttendanceRelationship.destroy();
+
+        return res.status(200).json({
+            "message": "Successfully deleted attendance from event"
+        })
+    }
+
+})
 
 
 
