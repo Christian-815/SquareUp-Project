@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Group, Membership, GroupImage, User, Venue, Event, Attendance, EventImage } = require('../../db/models');
+const { Group, Membership, EventImage } = require('../../db/models');
 const { Op } = require('sequelize');
 
 

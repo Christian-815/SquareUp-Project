@@ -29,7 +29,14 @@ const validateVenue = [
 
 
 router.put('/:venueId', validateVenue, async (req,res) => {
-    const user = req.user.dataValues
+    const user = req.user.dataValues;
+    if (!user) {
+        return res.status(401).json({
+            message: "Authentication required",
+            statusCode: 401
+        })
+    };
+
     const venue = await Venue.findByPk(req.params.venueId);
     if (!venue) {
         return res.status(404).json({
@@ -43,13 +50,14 @@ router.put('/:venueId', validateVenue, async (req,res) => {
         where: {
             [Op.and]: [
                 { userId: user.id },
-                { groupId: group.id }
+                { groupId: group.id },
+                { status: 'co-host'}
             ]
         },
         raw: true
     });
 
-    if (user.id !== group.organizerId || !userGroupRelationship || userGroupRelationship.status !== 'co-host') {
+    if (user.id !== group.organizerId && !userGroupRelationship) {
         return res.status(403).json({
             message: "Forbidden",
             statusCode: 403
