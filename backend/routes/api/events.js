@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { Event, Membership, Group, User, Venue, Attendance, EventImage } = require('../../db/models');
 const { Op } = require('sequelize');
-const { check } = require('express-validator');
+const { check, query } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
 const validateNewEvent = [
@@ -28,13 +28,68 @@ const validateNewEvent = [
     handleValidationErrors
 ];
 
+const validateEventsQueries = [
+    query("page")
+        .optional({ checkFalsy: true })
+        .isInt({ min: 1 })
+        .withMessage("Page must be greater than or equal to one"),
+    query("size")
+        .optional({ checkFalsy: true })
+        .isInt({ min: 1 })
+        .withMessage("Size must be greather than or equal to one"),
+    query("name").optional().isString().withMessage("Name must be a string"),
+    query("type")
+        .optional()
+        .isIn(["Online", "In Person"])
+        .withMessage("Type must be 'Online' or 'In Person'"),
+    query("startDate")
+        .optional()
+        .isDate()
+        .withMessage("Start date must be a valid datetime"),
+    handleValidationErrors,
+];
 
-router.get('/', async (req, res) => {
+
+
+router.get('/', validateEventsQueries, async (req, res) => {
+    let { page, size, name, type, startDate } = req.query;
+
+    const where = {};
+
+    if (name) {
+        where.name = name
+    };
+    if (type) {
+        where.type = type
+    };
+    if (startDate) {
+        let dayBegins = new Date(startDate);
+        let dayEnds = new Date(dayBegins);
+
+        dayEnds.setDate(dayBegins.getDate() + 1);
+        
+        where.startDate = { [Op.between]: [dayBegins, dayEnds] };
+    }
+
+    let pagination = {};
+    if (page <= 0 || isNaN(page) || !page) { page = 1 };
+    if (size <= 0 || isNaN(size) || !size) { size = 20 };
+    if (page > 10) { page = 10 }
+    if (size > 20) { size = 20 }
+
+    if (parseInt(page) >= 1 && parseInt(size) >= 1) {
+        pagination.limit = size;
+        pagination.offset = size * (page - 1);
+    }
+
+
     const events = await Event.findAll({
         attributes: {
             exclude: ['description', 'capacity', 'price', 'createdAt', 'updatedAt']
         },
-        raw: true
+        where,
+        raw: true,
+        ...pagination
     });
 
     for (let event of events) {
@@ -92,6 +147,19 @@ router.get('/', async (req, res) => {
     return res.status(200).json({
         Events: events
     })
+}, async (err, req, res, next) => {
+    if (err.errors) {
+        err.status = 400;
+        err.message = "Validation Error";
+        delete err.title
+
+        return res.status(400).json({
+            message: err.message,
+            statusCode: err.status,
+            errors: err.errors
+        })
+    };
+
 });
 
 router.get('/:eventId', async (req, res) => {
