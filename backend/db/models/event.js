@@ -56,11 +56,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     type: {
-      type: DataTypes.ENUM("Online", "In person"),
+      type: DataTypes.ENUM("Online", "In Person"),
       allowNull: false,
       validate: {
         validType(value) {
-          if (value !== 'Online' && value !== "In person") {
+          if (value !== 'Online' && value !== "In Person") {
             throw new Error("Type must be Online or In person")
           }
         }
