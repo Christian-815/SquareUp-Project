@@ -224,6 +224,12 @@ router.post('/', validateNewGroup, async (req, res) => {
         state
     });
 
+    const newGoupMember = await Membership.create({
+        userId: group.organizerId,
+        groupId: group.id,
+        status: 'co-host'
+    });
+
 
     return res.status(201).json(group)
 
@@ -244,7 +250,13 @@ router.post('/', validateNewGroup, async (req, res) => {
 });
 
 router.post('/:groupId/images', async (req, res) => {
-    const user = req.user.dataValues.id
+    const user = req.user.dataValues.id;
+    if (!user) {
+        return res.status(401).json({
+            message: "Authentication required",
+            statusCode: 401
+        })
+    };
     const group = await Group.findByPk(req.params.groupId);
     if (!group) {
         return res.status(404).json({
@@ -277,7 +289,14 @@ router.post('/:groupId/images', async (req, res) => {
 
 
 router.put('/:groupId', validateNewGroup, async (req, res) => {
-    const user = req.user.dataValues.id
+    const user = req.user.dataValues.id;
+    if (!user) {
+        return res.status(401).json({
+            message: "Authentication required",
+            statusCode: 401
+        })
+    };
+
     const group = await Group.findByPk(req.params.groupId);
     if (!group) {
         return res.status(404).json({
@@ -321,7 +340,14 @@ router.put('/:groupId', validateNewGroup, async (req, res) => {
 });
 
 router.delete('/:groupId', async (req, res) => {
-    const user = req.user.dataValues.id
+    const user = req.user.dataValues.id;
+    if (!user) {
+        return res.status(401).json({
+            message: "Authentication required",
+            statusCode: 401
+        })
+    };
+
     const group = await Group.findByPk(req.params.groupId);
     if (!group) {
         return res.status(404).json({
@@ -345,7 +371,13 @@ router.delete('/:groupId', async (req, res) => {
 });
 
 router.get('/:groupId/venues', async (req, res) => {
-    const user = req.user.dataValues
+    const user = req.user.dataValues;
+    if (!user) {
+        return res.status(401).json({
+            message: "Authentication required",
+            statusCode: 401
+        })
+    };
     const group = await Group.findByPk(req.params.groupId);
     if (!group) {
         return res.status(404).json({
@@ -358,13 +390,14 @@ router.get('/:groupId/venues', async (req, res) => {
         where: {
             [Op.and]: [
                 { userId: user.id },
-                { groupId: group.id }
+                { groupId: group.id },
+                { status: 'co-host'}
             ]
         },
         raw: true
     });
 
-    if (user.id !== group.organizerId || !userGroupRelationship || userGroupRelationship.status !== 'co-host') {
+    if (user.id !== group.organizerId && !userGroupRelationship) {
         return res.status(403).json({
             message: "Forbidden",
             statusCode: 403
@@ -385,7 +418,14 @@ router.get('/:groupId/venues', async (req, res) => {
 });
 
 router.post('/:groupId/venues', validateNewVenue, async (req, res) => {
-    const user = req.user.dataValues
+    const user = req.user.dataValues;
+    if (!user) {
+        return res.status(401).json({
+            message: "Authentication required",
+            statusCode: 401
+        })
+    };
+
     const group = await Group.findByPk(req.params.groupId);
     if (!group) {
         return res.status(404).json({
@@ -398,13 +438,14 @@ router.post('/:groupId/venues', validateNewVenue, async (req, res) => {
         where: {
             [Op.and]: [
                 { userId: user.id },
-                { groupId: group.id }
+                { groupId: group.id },
+                { status: 'co-host'}
             ]
         },
         raw: true
     });
 
-    if (user.id !== group.organizerId || !userGroupRelationship || userGroupRelationship.status !== 'co-host') {
+    if (user.id !== group.organizerId && !userGroupRelationship) {
         return res.status(403).json({
             message: "Forbidden",
             statusCode: 403
@@ -517,7 +558,14 @@ router.get('/:groupId/events', async (req, res) => {
 });
 
 router.post('/:groupId/events', validateNewEvent, async (req,res) => {
-    const user = req.user.dataValues
+    const user = req.user.dataValues;
+    if (!user) {
+        return res.status(401).json({
+            message: "Authentication required",
+            statusCode: 401
+        })
+    };
+
     const group = await Group.findByPk(req.params.groupId);
     if (!group) {
         return res.status(404).json({
@@ -530,13 +578,14 @@ router.post('/:groupId/events', validateNewEvent, async (req,res) => {
         where: {
             [Op.and]: [
                 { userId: user.id },
-                { groupId: group.id }
+                { groupId: group.id },
+                { status: 'co-host'}
             ]
         },
         raw: true
     });
 
-    if (user.id !== group.organizerId || !userGroupRelationship || userGroupRelationship.status !== 'co-host') {
+    if (user.id !== group.organizerId && !userGroupRelationship) {
         return res.status(403).json({
             message: "Forbidden",
             statusCode: 403
@@ -750,7 +799,7 @@ router.post('/:groupId/membership', async (req,res) => {
         });
 
         if (userGroupRelationshipMember) {
-            return res.status(200).json({
+            return res.status(400).json({
                 message: "User is already a member of the group",
                 statusCode: 400
             })
@@ -889,6 +938,7 @@ router.delete('/:groupId/membership', async (req,res) => {
             statusCode: 401
         })
     };
+    
     const group = await Group.findByPk(req.params.groupId);
     if (!group) {
         return res.status(404).json({

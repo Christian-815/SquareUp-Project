@@ -6,6 +6,9 @@ const { check, query } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
 const validateNewEvent = [
+    check('venueId')
+        .exists({ checkFalsy: true })
+        .withMessage("Venue does not exist"),
     check('name')
         .exists({ checkFalsy: true })
         .isLength({ min: 5 })
@@ -222,9 +225,7 @@ router.get('/:eventId', async (req, res) => {
     }
 
 
-    return res.status(200).json({
-        Events: event
-    })
+    return res.status(200).json(event)
 });
 
 router.post('/:eventId/images', async (req, res) => {
@@ -291,7 +292,7 @@ router.post('/:eventId/images', async (req, res) => {
         });
 
 
-        if (!userGroupRelationship || eventGroup.organizerId !== user.id) {
+        if (!userGroupRelationship && eventGroup.organizerId !== user.id) {
             return res.status(403).json({
                 message: "Forbidden",
                 statusCode: 403
@@ -326,6 +327,13 @@ router.put('/:eventId', validateNewEvent, async (req, res) => {
         })
     };
 
+    if (!user) {
+        return res.status(401).json({
+            message: "Authentication required",
+            statusCode: 401
+        })
+    };
+
     const event = await Event.findByPk(req.params.eventId, {
         attributes: {
             exclude: ['createdAt', 'updatedAt']
@@ -351,7 +359,7 @@ router.put('/:eventId', validateNewEvent, async (req, res) => {
     });
 
 
-    if (!userGroupRelationship || eventGroup.organizerId !== user.id) {
+    if (!userGroupRelationship && eventGroup.organizerId !== user.id) {
         return res.status(403).json({
             message: "Forbidden",
             statusCode: 403
@@ -522,6 +530,12 @@ router.get('/:eventId/attendees', async (req, res) => {
                 status: attendee.status
             };
 
+            delete attendee.eventId;
+            delete attendee.userId;
+            delete attendee.status
+            delete attendee.createdAt;
+            delete attendee.updatedAt;
+
         };
 
         return res.status(200).json({
@@ -553,6 +567,12 @@ router.get('/:eventId/attendees', async (req, res) => {
             attendee.Attendace = {
                 status: attendee.status
             };
+
+            delete attendee.eventId;
+            delete attendee.userId;
+            delete attendee.status
+            delete attendee.createdAt;
+            delete attendee.updatedAt;
 
         };
 
@@ -611,7 +631,7 @@ router.post('/:eventId/attendance', async (req, res) => {
     });
 
     if (userAttendanceRelationship) {
-        if (userAttendanceRelationship.status === 'member') {
+        if (userAttendanceRelationship.status === 'member' || userAttendanceRelationship.status === 'attending') {
             return res.status(400).json({
                 "message": "User is already an attendee of the event",
                 "statusCode": 400
@@ -703,7 +723,12 @@ router.put('/:eventId/attendance', async (req, res) => {
         status: status
     });
 
-    return res.status(200).json(userEventRelationship)
+    return res.status(200).json({
+        id: userEventRelationship.id,
+        eventId: userEventRelationship.eventId,
+        userId: userEventRelationship.userId,
+        status: userEventRelationship.status
+    })
 
 });
 
