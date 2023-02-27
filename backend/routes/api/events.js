@@ -12,8 +12,8 @@ const validateNewEvent = [
         .withMessage("Name must be at least 5 characters"),
     check('type')
         .exists({ checkFalsy: true })
-        .isIn(['Online', 'In person'])
-        .withMessage("Type must be Online or In person"),
+        .isIn(['Online', 'In Person'])
+        .withMessage("Type must be Online or In Person"),
     check('capacity')
         .exists({ checkFalsy: true })
         .isInt()
@@ -37,7 +37,10 @@ const validateEventsQueries = [
         .optional({ checkFalsy: true })
         .isInt({ min: 1 })
         .withMessage("Size must be greather than or equal to one"),
-    query("name").optional().isString().withMessage("Name must be a string"),
+    query("name")
+        .optional()
+        .isString()
+        .withMessage("Name must be a string"),
     query("type")
         .optional()
         .isIn(["Online", "In Person"])
@@ -67,7 +70,7 @@ router.get('/', validateEventsQueries, async (req, res) => {
         let dayEnds = new Date(dayBegins);
 
         dayEnds.setDate(dayBegins.getDate() + 1);
-        
+
         where.startDate = { [Op.between]: [dayBegins, dayEnds] };
     }
 

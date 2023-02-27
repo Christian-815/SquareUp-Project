@@ -61,7 +61,7 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         validType(value) {
           if (value !== 'Online' && value !== "In Person") {
-            throw new Error("Type must be Online or In person")
+            throw new Error("Type must be Online or In Person")
           }
         }
       }
