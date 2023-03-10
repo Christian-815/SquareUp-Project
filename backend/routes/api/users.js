@@ -58,14 +58,16 @@ router.post(
         // console.log(jsonUser)
 
 
-        return res.json(jsonUser);
+        return res.json({
+            user: jsonUser
+        });
     },
     async (err, req, res, next) => {
         if (err.errors.email === 'User with that email already exists') {
             err.status = 403;
             err.message = "User already exists";
             delete err.title
-    
+
             return res.status(403).json({
                 message: err.message,
                 statusCode: err.status,
