@@ -44,6 +44,7 @@ const validateSignup = [
     handleValidationErrors
 ];
 
+
 // Sign up
 router.post(
     '/',
@@ -55,7 +56,8 @@ router.post(
         const jsonUser = user.toJSON();
         const token = await setTokenCookie(res, user);
         jsonUser.token = token
-        // console.log(jsonUser)
+        // console.log('----------------------FIRST ROUTE HANDLER-------------------------')
+        // console.log('//////////////////////////////////////////////////////////////////', req.body)
 
 
         return res.json({
@@ -63,7 +65,9 @@ router.post(
         });
     },
     async (err, req, res, next) => {
+        console.log('--------------------SECOND MIDDLEWARE FUNCTION----------------')
         if (err.errors.email === 'User with that email already exists') {
+            // console.log('|||||||||||||||||||||||ERROR SAME EMAIL|||||||||||||||||||||||||||||||||', req.body)
             err.status = 403;
             err.message = "User already exists";
             delete err.title
@@ -76,6 +80,7 @@ router.post(
         };
 
         if (err.errors.email) {
+            // console.log('///////////////////////////////ERROR EMAIL INVALID///////////////////////////////////', req.body)
             err.status = 400;
             err.message = "Validation error";
             err.errors.email = "Invalid email"
@@ -107,6 +112,30 @@ router.post(
                 error: err.errors
             })
         };
+
+        if (err.errors.username) {
+            err.status = 400;
+            err.message = "Validation error";
+            err.errors.username = "Please provide a username with at least 4 characters."
+            return res.status(400).json({
+                message: err.message,
+                statusCode: err.status,
+                error: err.errors
+            })
+        };
+
+        if (err.errors.password) {
+            err.status = 400;
+            err.message = "Validation error";
+            err.errors.password = "Password must be 6 characters or more."
+            return res.status(400).json({
+                message: err.message,
+                statusCode: err.status,
+                error: err.errors
+            })
+        };
+
+        return next(err)
     }
 );
 

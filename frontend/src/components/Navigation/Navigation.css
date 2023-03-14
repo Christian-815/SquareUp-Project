@@ -1,3 +1,50 @@
 .hidden {
     display: none
 }
+
+.user-icon {
+    font-size: 25px;
+    display: flex;
+    column-gap: 10px;
+    color: black;
+    /* box-shadow: 1px 1px 10px black; */
+    /* position: relative; */
+    /* padding: 3px; */
+}
+
+.userIcon-button {
+    box-shadow: 1px 1px 10px gray;
+}
+
+.profile-dropdown {
+    position: absolute;
+    /* margin-right: auto; */
+    right: 10px;
+    /* border: 1px solid black; */
+}
+
+.profile-button {
+    /* position: relative; */
+    /* padding: 10px; */
+    margin-right: 40px;
+}
+
+.logo {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0px 20px 0px 20px;
+}
+
+.homepage-logo {
+    color: #D2042D;
+    cursor: pointer;
+    font-family: 'Oswald', sans-serif;
+}
+
+.user-loginSignup {
+    display: flex;
+    column-gap: 30px;
+    font-family: 'Oswald', sans-serif;
+}

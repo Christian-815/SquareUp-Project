@@ -42,7 +42,13 @@ app.use(
 
 app.use(routes);
 
+app.use((req, res, next) => {
+  console.log('Before error handlers')
+  next()
+})
+
 app.use((_req, _res, next) => {
+  // console.log('--------------FIRST ERRROR-----------------')
   const err = new Error("The requested resource couldn't be found.");
   err.title = "Resource Not Found";
   err.errors = { message: "The requested resource couldn't be found." };
@@ -51,6 +57,8 @@ app.use((_req, _res, next) => {
 });
 
 app.use((err, _req, _res, next) => {
+  // console.log('--------------SECOND ERRROR-----------------')
+
   // check if error is a Sequelize error:
   if (err instanceof ValidationError) {
     let errors = {};
@@ -64,6 +72,8 @@ app.use((err, _req, _res, next) => {
 });
 
 app.use((err, _req, res, _next) => {
+  // console.log('--------------THIRD ERRROR-----------------')
+
   res.status(err.status || 500);
   console.error(err);
   res.json({
