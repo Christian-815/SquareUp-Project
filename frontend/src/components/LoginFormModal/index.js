@@ -8,18 +8,22 @@ function LoginFormModal() {
     const dispatch = useDispatch();
     const [credential, setCredential] = useState("");
     const [password, setPassword] = useState("");
-    const [errors, setErrors] = useState([]);
+    const [errors, setErrors] = useState({});
     const { closeModal } = useModal();
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setErrors([]);
+        setErrors({});
         return dispatch(sessionActions.login({ credential, password }))
             .then(closeModal)
             .catch(
                 async (res) => {
                     const data = await res.json();
-                    if (data && data.errors) setErrors(data.errors);
+                    // console.log(data)
+                    if (data && data.message) setErrors({
+                        message: data.message
+                    });
+                    // console.log(errors)
                 }
             );
     };
@@ -28,11 +32,6 @@ function LoginFormModal() {
         <>
             <h1>Log In</h1>
             <form onSubmit={handleSubmit}>
-                <ul>
-                    {errors.map((error, idx) => (
-                        <li key={idx}>{error}</li>
-                    ))}
-                </ul>
                 <label>
                     Username or Email
                     <input
@@ -51,6 +50,9 @@ function LoginFormModal() {
                         required
                     />
                 </label>
+                <ul>
+                    {errors.message}
+                </ul>
                 <button type="submit">Log In</button>
             </form>
         </>

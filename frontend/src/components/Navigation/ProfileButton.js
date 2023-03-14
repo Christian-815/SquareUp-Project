@@ -41,8 +41,9 @@ function ProfileButton({ user }) {
 
     return (
         <>
-            <button onClick={openMenu}>
+            <button className='userIcon-button' onClick={openMenu}>
                 <div className='user-icon'>
+                    <i className="fa-solid fa-bars"></i>
                     <i className="fa-solid fa-user-ninja"></i>
                 </div>
             </button>
