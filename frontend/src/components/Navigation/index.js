@@ -1,23 +1,41 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ProfileButton from './ProfileButton';
 import './Navigation.css';
 
 function Navigation({ isLoaded }) {
     const sessionUser = useSelector(state => state.session.user);
+    const history = useHistory();
+
+    const handleClick = () => {
+        history.push('/')
+    }
 
     return (
-        <ul>
-            <li>
-                <NavLink exact to="/">SquareUp</NavLink>
-            </li>
+        <div className='logo'>
+            <h1 className='homepage-logo' onClick={handleClick}>
+                <div>
+                    <i className="fa-solid fa-gamepad"></i>
+                    SquareUp
+                </div>
+            </h1>
             {isLoaded && (
-                <li>
+                <div className='profile-button'>
                     <ProfileButton user={sessionUser} />
-                </li>
+                </div>
             )}
-        </ul>
+        </div>
+        // <ul>
+        //     <li>
+        //         <NavLink exact to="/">SquareUp</NavLink>
+        //     </li>
+        //     {isLoaded && (
+        //         <li>
+        //             <ProfileButton user={sessionUser} />
+        //         </li>
+        //     )}
+        // </ul>
     );
 }
 
