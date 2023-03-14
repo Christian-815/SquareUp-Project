@@ -37,6 +37,11 @@ function LoginFormModal() {
         }
     }, [credential, password])
 
+    const handleClick = () => {
+        setCredential('Demo-lition');
+        setPassword('password')
+    }
+
 
 
     return (
@@ -57,7 +62,7 @@ function LoginFormModal() {
                             value={credential}
                             onChange={(e) => setCredential(e.target.value)}
                             required
-                            className="input-box"
+                            className="login-input-box"
                         />
                     </label>
                     <label className="userpassword-input-title">
@@ -67,10 +72,12 @@ function LoginFormModal() {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
-                            className="input-box"
+                            className="login-input-box"
                         />
                     </label>
-                    <button className="login-button" type="submit" disabled={disabled} >Log In</button>
+                    <button className="login-submit-button" type="submit" disabled={disabled} >Log In</button>
+                    <div className="button-seperator">OR</div>
+                    <button className="login-submit-button" type='submit' onClick={handleClick}>Demo Login</button>
                 </form>
             </div>
         </>

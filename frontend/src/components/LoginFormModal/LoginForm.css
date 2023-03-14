@@ -1,27 +1,31 @@
 .login-form {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
     border: 1px solid;
-    padding: 20px 60px 200px 60px;
+    padding: 2em 6em 15em 6em;
     border-radius: 10px;
     background-color: white;
     width: 100%;
 }
 
 .login-logo {
-    /* width: 100%; */
     font-size: 25px;
     color: #D2042D;
     padding-top: 0px;
     position: absolute;
+    align-self: center;
+}
+
+.login-header {
+    font-family: 'Oswald', sans-serif;
+    align-self: center;
 }
 
 .username-input-title {
     display: flex;
     flex-direction: column;
     font-family: 'Merriweather', serif;
-    /* font-size: 14px; */
     width: 100%;
 }
 
@@ -31,18 +35,13 @@
     padding-top: 15px;
     padding-bottom: 20px;
     font-family: 'Merriweather', serif;
-    /* font-size: 12px; */
 }
 
 .input-box {
     border-radius: 5px;
     padding: 7px;
-    /* width: 100%; */
 }
 
-.login-header {
-    font-family: 'Oswald', sans-serif;
-}
 
 .login-error {
     padding-bottom: 10px;
@@ -52,7 +51,7 @@
     color: red;
 }
 
-.login-button {
+.login-submit-button {
     width: 100%;
     background-color: #D2042D;
     border: 0px solid;
@@ -60,4 +59,11 @@
     color: white;
     font-family: 'Oswald', sans-serif;
     padding: 7px;
+}
+
+.button-seperator {
+    display: flex;
+    justify-content: center;
+    padding-top: 0.7em;
+    padding-bottom: 0.7em;
 }
