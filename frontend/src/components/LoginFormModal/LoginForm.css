@@ -44,11 +44,15 @@
 
 
 .login-error {
-    padding-bottom: 10px;
+    /* padding-bottom: 1em; */
     font-size: 12px;
     font-family: 'Merriweather', serif;
     font-weight: bold;
     color: red;
+    /* align-self: center; */
+    position: absolute;
+    right: 2.5em;
+    top: 6.5em;
 }
 
 .login-submit-button {
