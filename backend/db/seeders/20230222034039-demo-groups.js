@@ -23,27 +23,27 @@ module.exports = {
    await queryInterface.bulkInsert(options, [
      {
        organizerId: 1,
-       name: "Evening Tennis on the Water",
-       about: "Enjoy rounds of tennis with a tight-nit group of people on the water facing the Brooklyn Bridge. Singles or doubles.",
+       name: "Brothers of Smash",
+       about: "Enjoy rounds of 1v1 matches of Super Smash Bros. Melee with a tight-nit group of competitive people at our local gaming bar. 3-stock or 5-stock.",
        type: "In person",
        private: true,
-       city: "New York",
-       state: "NY"
+       city: "San Jose",
+       state: "CA"
      },
      {
        organizerId: 2,
-       name: "Evening Soccer on the Water",
-       about: "Enjoy rounds of soccer with a tight-nit group of people on the water facing the Brooklyn Bridge.",
+       name: "Lovers in the sheets, Fighters in the Streets",
+       about: "Enjoy rounds of Street Fighter with our friendly group of people at the local arcade. We have pros and casual players so whatever type of competitiveness you're looking for, we got it!",
        type: "In person",
-       private: true,
-       city: "New York",
-       state: "NY"
+       private: false,
+       city: "San Diego",
+       state: "CA"
      },
      {
        organizerId: 3,
-       name: "Evening Volleyball on the Water",
-       about: "Enjoy rounds of Volleyball with a tight-nit group of people on the water facing the Brooklyn Bridge.",
-       type: "In person",
+       name: "Justice of Injustice",
+       about: "Enjoy rounds of Injustice with a tight-nit group of people just trying to get better at the game. We play both Injustice 1 and 2 so all are welcome!",
+       type: "Online",
        private: true,
        city: "New York",
        state: "NY"

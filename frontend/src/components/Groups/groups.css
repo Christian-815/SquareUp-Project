@@ -1,0 +1,22 @@
+.groups-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.individual-groups {
+    display: flex;
+    flex-direction: row;
+    /* align-items: stretch; */
+    column-gap: 2em;
+    border-bottom: medium solid grey;
+    width: 40em;
+    height: 10em;
+}
+
+.group-image {
+    width: 100%;
+    height: 100%;
+    padding-top: 1em;
+    object-fit: contain;
+}
