@@ -1,26 +1,30 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllGroups } from '../../store/groups';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link, useHistory } from 'react-router-dom';
 import './groups.css';
 
 
 export default function Groups() {
     const dispatch = useDispatch();
+    const history = useHistory();
+
+    const routeChange = (groupId) => {
+        let path = `/groups/${groupId}`;
+        history.push(path);
+    }
 
     useEffect(() => {
         dispatch(getAllGroups())
     }, [dispatch]);
 
     const groupsObj = useSelector(state=>state.groups.groups.allGroups);
-    // console.log(Object.values(groupsObj).length)
+
     if (!Object.values(groupsObj).length) {
         return null;
     }
+
     const groups = groupsObj.Groups
-    // console.log('===========groups=========', groups)
-
-
 
     const groupStatus = (groupPrivateOrPublic) => {
         if (!groupPrivateOrPublic) {
@@ -30,25 +34,38 @@ export default function Groups() {
         }
     }
 
+    const hasPreview = (previewImage) => {
+        if (!previewImage) {
+            return 'No preview image for this group'
+        } else {
+            return previewImage
+        }
+    }
+
+
     return (
         <div className='groups-page'>
-            <div>
-                <h1>Groups</h1>
-                <h1>Events</h1>
+            <div className='show-list'>
+                <Link to='/events' className='unactive-list'>
+                    <h1>Events</h1>
+                </Link>
+                <NavLink to='/groups' activeClassName='active-list'>
+                    <h1>Groups</h1>
+                </NavLink>
             </div>
-            <div>Groups in SquareUp</div>
+            <div className='list-description'>Groups in SquareUp</div>
             <div>
                 {groups.map((group) => (
-                    <div key={group.id} className='individual-groups'>
-                        <div>
-                            <img src={group.previewImage} alt='group' className='group-image'></img>
+                    <div key={group.id} className='individual-groups' onClick={() => routeChange(group.id)}>
+                        <div className='group-div-left'>
+                            <img src={hasPreview(group.previewImage)} alt='group' className='group-image'></img>
                         </div>
-                        <div>
-                            <NavLink to={`/group/${group.id}`}>
+                        <div className='group-div-right'>
+                            <h3>
                                 {group.name}
-                            </NavLink>
+                            </h3>
                             <div>{group.city}, {group.state}</div>
-                            <p>{group.about}</p>
+                            <div>{group.about}</div>
                             <div>
                                 (# of events) events  •  {groupStatus(group.private)}
                             </div>
@@ -57,5 +74,9 @@ export default function Groups() {
                 ))}
             </div>
         </div>
+
+        // <NavLink to={`/group/${group.id}`}>
+        //                             {group.name}
+        //                         </NavLink>
     )
 }
