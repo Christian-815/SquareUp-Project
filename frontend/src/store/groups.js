@@ -12,12 +12,12 @@ export const loadGroups = groups => ({
 
 
 //THUNKS
-const getAllGroups = () => async dispatch => {
+export const getAllGroups = () => async dispatch => {
     const response = await fetch('/api/groups')
 
     if (response.ok) {
         const groups = await response.json();
-        console.log(groups)
+        // console.log('-----------Groups Thunk---------', groups)
         dispatch(loadGroups(groups))
     }
 }

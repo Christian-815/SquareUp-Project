@@ -7,9 +7,6 @@
     display: flex;
     column-gap: 10px;
     color: black;
-    /* box-shadow: 1px 1px 10px black; */
-    /* position: relative; */
-    /* padding: 3px; */
 }
 
 .userIcon-button {
@@ -18,14 +15,10 @@
 
 .profile-dropdown {
     position: absolute;
-    /* margin-right: auto; */
     right: 10px;
-    /* border: 1px solid black; */
 }
 
 .profile-button {
-    /* position: relative; */
-    /* padding: 10px; */
     margin-right: 40px;
 }
 

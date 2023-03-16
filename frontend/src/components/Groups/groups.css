@@ -1,0 +1,61 @@
+.groups-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.show-list {
+    display: flex;
+    column-gap: 1.5em;
+    width: 40em;
+}
+
+.list-description {
+    display: flex;
+    column-gap: 1.5em;
+    width: 40em;
+    border-bottom: medium solid lightgray;
+    padding-bottom: 0.5em;
+}
+
+.active-list {
+    text-decoration: underline;
+    color: teal;
+    cursor: default;
+}
+
+.unactive-list {
+    text-decoration: none;
+    color: black;
+}
+
+.unactive-list:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.individual-groups {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    column-gap: 1em;
+    border-bottom: medium solid lightgray;
+    width: 40em;
+    height: 10em;
+    padding-bottom: 0.5em;
+    padding-top: 1em;
+}
+
+.group-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.group-div-right {
+    width: 66%;
+}
+
+.group-div-left {
+    width: 33%;
+}
