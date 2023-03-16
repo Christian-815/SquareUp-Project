@@ -6,6 +6,7 @@ import * as groupActions from './store/groups';
 import Navigation from "./components/Navigation";
 import HomePage from "./components/Home";
 import Groups from "./components/Groups";
+import SingleGroup from "./components/SingleGroup";
 
 function App() {
   const dispatch = useDispatch();
@@ -23,8 +24,11 @@ function App() {
           <Route path='/' exact>
             <HomePage />
           </Route>
-          <Route path='/groups'>
+          <Route path='/groups' exact>
             <Groups />
+          </Route>
+          <Route path='/groups/:groupId' exact>
+            <SingleGroup />
           </Route>
         </Switch>
       )}
