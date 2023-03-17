@@ -30,7 +30,6 @@ export const getAllGroups = () => async dispatch => {
 
     if (response.ok) {
         const groups = await response.json();
-        // console.log('-----------Groups Thunk---------', groups)
         dispatch(loadGroups(groups))
     }
 };
@@ -40,13 +39,11 @@ export const getOneGroup = (id) => async dispatch => {
 
     if (response.ok) {
         const group = await response.json();
-        // console.log('-----------One Group Thunk---------', group)
         dispatch(singleGroup(group))
     }
 };
 
 export const createGroup = (newGroup) => async (dispatch) => {
-    // console.log('-----------Create Group Thunk---------', JSON.stringify(newGroup))
 
     const response = await csrfFetch(`/api/groups`, {
         method: 'POST',
@@ -54,11 +51,8 @@ export const createGroup = (newGroup) => async (dispatch) => {
         body: JSON.stringify(newGroup)
     });
 
-    // console.log('-----------Create Group Thunk after fetch---------')
-
     if (response.ok) {
         const group = await response.json();
-        // console.log('-----------Create Group Thunk---------', group)
         dispatch(addOneGroup(group));
         return group;
     }

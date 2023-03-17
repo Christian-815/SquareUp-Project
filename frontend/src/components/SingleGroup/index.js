@@ -52,14 +52,22 @@ export default function SingleGroup() {
         if (groupImages.length) {
             for (let image of groupImages) {
                 if (image.preview) {
-                    return image.url
+                    return (
+                        <img src={image.url} alt='group logo' className='group-image'></img>
+                    )
                 }
             }
 
-            return groupImages[0].url
+            return (
+                <img src={groupImages[0].url} alt='group logo' className='group-image'></img>
+            )
         }
 
-        return 'No images for this group yet'
+        return (
+            <div className='group-image'>
+                No images for this group yet
+            </div>
+        )
     }
 
     const groupStatus = (groupPrivateOrPublic) => {
@@ -79,7 +87,7 @@ export default function SingleGroup() {
             <span className='groups-span'>🡠<Link to='/groups' className='groups-back-link'>Groups</Link></span>
             <div className='group-header'>
                 <div className='group-header-left'>
-                    <img src={checkForPreviewImage(groupObj.GroupImages)} alt='group logo' className='group-image'></img>
+                    {checkForPreviewImage(groupObj.GroupImages)}
                 </div>
                 <div className='group-header-right'>
                     <div>

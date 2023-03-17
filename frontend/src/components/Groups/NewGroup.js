@@ -1,11 +1,10 @@
 import './newGroup.css'
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from "react-redux";
-import { useModal } from "../../context/Modal";
 import { createGroup } from '../../store/groups';
 
-export default function GroupFormModal() {
+export default function GroupForm() {
     const dispatch = useDispatch();
     const history = useHistory()
     const [errors, setErrors] = useState({});
@@ -15,13 +14,12 @@ export default function GroupFormModal() {
     const [state, setState] = useState('')
     const [type, setType] = useState('')
     const [groupPrivate, setGroupPrivate] = useState()
-    const { closeModal } = useModal();
 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setErrors({});
-        // console.log(payload)
+
         const payload = {
             name,
             about,
@@ -43,17 +41,8 @@ export default function GroupFormModal() {
 
         if (newGroup) {
             history.push(`/groups/${newGroup.id}`)
-            return closeModal()
         }
 
-        // return closeModal
-            // .catch(
-            //     async (res) => {
-            //         const data = await res.json();
-            //         console.log(data)
-            //         if (data && data.error) setErrors(data.error);
-            //     }
-            // );
     };
 
     return (
