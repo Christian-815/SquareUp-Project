@@ -20,7 +20,7 @@ const validateNewGroup = [
         .exists({ checkFalsy: true })
         .isIn(['Online', 'In person'])
         .withMessage("Type must be 'Online' or 'In person'"),
-    check('private')
+    check('groupPrivate')
         .exists({ checkFalsy: true })
         .isBoolean()
         .withMessage("Private must be a boolean"),
@@ -212,14 +212,14 @@ router.post('/', validateNewGroup, async (req, res) => {
     const currentUser = user.dataValues.id;
     // console.log(currentUser)
 
-    const { name, about, type, private, city, state } = req.body;
+    const { name, about, type, groupPrivate, city, state } = req.body;
 
     const group = await Group.create({
         organizerId: currentUser,
         name,
         about,
         type,
-        private,
+        private: groupPrivate,
         city,
         state
     });
@@ -938,7 +938,7 @@ router.delete('/:groupId/membership', async (req,res) => {
             statusCode: 401
         })
     };
-    
+
     const group = await Group.findByPk(req.params.groupId);
     if (!group) {
         return res.status(404).json({

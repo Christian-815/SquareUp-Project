@@ -16,7 +16,7 @@ const handleValidationErrors = (req, _res, next) => {
         err.errors = errors;
         err.status = 400;
         err.title = "Bad request.";
-        console.log('BEFORE NEXT', err)
+        // console.log('BEFORE NEXT', err)
         // throw new Error('Sanity check');
         next(err);
     } else {

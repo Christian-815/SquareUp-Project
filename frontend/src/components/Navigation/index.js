@@ -6,6 +6,7 @@ import OpenModalButton from '../OpenModalButton';
 import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
 import './Navigation.css';
+import GroupFormModal from '../Groups/NewGroupModal';
 
 function Navigation({ isLoaded }) {
     const sessionUser = useSelector(state => state.session.user);
@@ -13,8 +14,18 @@ function Navigation({ isLoaded }) {
     let sessionLinks;
     if (sessionUser) {
         sessionLinks = (
-            <div className='profile-button'>
-                <ProfileButton user={sessionUser} />
+            <div className='user-loginSignup'>
+                <div>
+                    <div>
+                        <OpenModalButton
+                            buttonText="Start a new group"
+                            modalComponent={<GroupFormModal />}
+                        />
+                    </div>
+                </div>
+                <div className='profile-button'>
+                    <ProfileButton user={sessionUser} />
+                </div>
             </div>
         );
     } else {
