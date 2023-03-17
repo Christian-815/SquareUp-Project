@@ -38,7 +38,18 @@
     justify-content: center;
     align-items: center;
     column-gap: 8em;
-    padding: 1em 5em 0em 5em;
+    /* padding: 1em 5em 0em 5em; */
+    /* margin: auto; */
+}
+
+.redirects-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 15em;
+    font-size: 15px;
+    /* padding: 1em 5em 0em 5em; */
+    /* margin: auto; */
 }
 
 .active {

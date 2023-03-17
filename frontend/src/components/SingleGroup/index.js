@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import { getOneGroup } from '../../store/groups';
+import './singleGroup.css'
 
 
 
@@ -11,7 +12,7 @@ export default function SingleGroup() {
     const { groupId } = useParams();
 
     const sessionUser = useSelector(state => state.session.user);
-    console.log(sessionUser)
+    // console.log(sessionUser)
 
     useEffect(() => {
         dispatch(getOneGroup(groupId))
@@ -21,7 +22,13 @@ export default function SingleGroup() {
     console.log(groupObj)
 
     let userLinks;
-    if (sessionUser.id === groupObj.organizerId) {
+    if (!sessionUser) {
+        userLinks = (
+            <div>
+                <button>Join this group</button>
+            </div>
+        )
+    } else if (sessionUser.id === groupObj.organizerId) {
         userLinks = (
             <div>
                 <button>Create Event</button>
@@ -55,23 +62,51 @@ export default function SingleGroup() {
         return 'No images for this group yet'
     }
 
+    const groupStatus = (groupPrivateOrPublic) => {
+        if (!groupPrivateOrPublic) {
+            return 'Public'
+        } else {
+            return 'Private'
+        }
+    }
+
 
 
 
 
     return (
         <div className='group-page'>
-            <div>
-                <span>🡠<Link to='/groups'>Groups</Link></span>
-                <div>
+            <span className='groups-span'>🡠<Link to='/groups' className='groups-back-link'>Groups</Link></span>
+            <div className='group-header'>
+                <div className='group-header-left'>
                     <img src={checkForPreviewImage(groupObj.GroupImages)} alt='group logo' className='group-image'></img>
                 </div>
-                <div>
-                    <h3>{groupObj.name}</h3>
-                    <div>{groupObj.city}, {groupObj.state}</div>
-                    <div>Organized by {groupObj.Organizer.firstName} {groupObj.Organizer.lastName}</div>
+                <div className='group-header-right'>
+                    <div>
+                        <h1 className='group-name'>{groupObj.name}</h1>
+                        <div>{groupObj.city}, {groupObj.state}</div>
+                        <div>
+                            (# of events) events  •  {groupStatus(groupObj.private)}
+                        </div>
+                        <div>Organized by {groupObj.Organizer.firstName} {groupObj.Organizer.lastName}</div>
+                    </div>
+                    <div>
+                        <div className='group-interaction'>{userLinks}</div>
+                    </div>
                 </div>
-                <div>{userLinks}</div>
+            </div>
+            <div className='group-description'>
+                <div>
+                    <h2>Organizer</h2>
+                    <div>{groupObj.Organizer.firstName} {groupObj.Organizer.lastName}</div>
+                </div>
+                <div>
+                    <h3>What we're about</h3>
+                    <p>{groupObj.about}</p>
+                </div>
+                <div>
+                    PLACEHOLDER FOR FUTURE AND PAST EVENTS
+                </div>
             </div>
         </div>
     )

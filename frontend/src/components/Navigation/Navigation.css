@@ -15,7 +15,9 @@
 
 .profile-dropdown {
     position: absolute;
-    right: 10px;
+    background-color: white;
+    border: 1px solid black;
+    box-shadow: 1px 1px 10px gray;
 }
 
 .profile-button {
@@ -28,6 +30,7 @@
     justify-content: space-between;
     align-items: center;
     margin: 0px 20px 0px 20px;
+    border-bottom: medium solid lightgray;
 }
 
 .homepage-logo {
