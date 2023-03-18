@@ -1,28 +1,23 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ProfileButton from './ProfileButton';
 import OpenModalButton from '../OpenModalButton';
 import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
 import './Navigation.css';
-import GroupFormModal from '../Groups/NewGroupModal';
 
 function Navigation({ isLoaded }) {
+    const history = useHistory();
     const sessionUser = useSelector(state => state.session.user);
 
     let sessionLinks;
     if (sessionUser) {
         sessionLinks = (
             <div className='user-loginSignup'>
-                <div>
-                    <div>
-                        <OpenModalButton
-                            buttonText="Start a new group"
-                            modalComponent={<GroupFormModal />}
-                        />
-                    </div>
-                </div>
+                <Link to='/groups/new' className='active'>
+                    Start a new Group
+                </Link>
                 <div className='profile-button'>
                     <ProfileButton user={sessionUser} />
                 </div>
@@ -47,7 +42,6 @@ function Navigation({ isLoaded }) {
         );
     }
 
-    const history = useHistory();
 
     const handleClick = () => {
         history.push('/')

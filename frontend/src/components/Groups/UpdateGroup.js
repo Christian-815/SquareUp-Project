@@ -1,27 +1,45 @@
 import './newGroup.css'
-import React, { useState, useEffect } from "react";
-import { useHistory } from 'react-router-dom';
-import { useDispatch } from "react-redux";
-import { useModal } from "../../context/Modal";
-import { createGroup } from '../../store/groups';
+import React, { useEffect, useState } from "react";
+import { useHistory, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from "react-redux";
+import { getAllGroups, updateGroup } from '../../store/groups';
 
-export default function GroupFormModal() {
+export default function UpdateGroup({groups}) {
     const dispatch = useDispatch();
-    const history = useHistory()
-    const [errors, setErrors] = useState({});
-    const [name, setName] = useState('')
-    const [about, setAbout] = useState('')
-    const [city, setCity] = useState('')
-    const [state, setState] = useState('')
-    const [type, setType] = useState('')
-    const [groupPrivate, setGroupPrivate] = useState()
-    const { closeModal } = useModal();
+    const history = useHistory();
+    const {groupId} = useParams();
 
+    const currentGroup = groups.Groups.filter(group => group.id === parseInt(groupId))[0]
+    console.log(currentGroup)
+
+    const [errors, setErrors] = useState({});
+    const [name, setName] = useState(currentGroup.name)
+    const [about, setAbout] = useState(currentGroup.about)
+    const [city, setCity] = useState(currentGroup.city)
+    const [state, setState] = useState(currentGroup.state)
+    const [type, setType] = useState(currentGroup.type)
+    const [groupPrivate, setGroupPrivate] = useState(currentGroup.groupPrivate)
+
+
+    useEffect(() => {
+        dispatch(getAllGroups())
+    }, [dispatch]);
+
+
+    // const groupObj = useSelector(state => state.groups.groups.allGroups)
+    // // console.log('----------------------' , groupObj)
+    // if (!Object.values(groupObj).length) {
+    //     // console.log('-------------group obj bad---------', groupObj)
+    //     return null;
+    // }
+
+    // const group = groupObj.Groups.filter(group => group.id === parseInt(groupId))[0]
+    // // console.log('-----------group-----------', group)
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setErrors({});
-        // console.log(payload)
+
         const payload = {
             name,
             about,
@@ -31,7 +49,7 @@ export default function GroupFormModal() {
             groupPrivate
         }
 
-        let newGroup = await dispatch(createGroup(payload)).catch(
+        let editedGroup = await dispatch(updateGroup(payload, groupId)).catch(
             async (res) => {
                 const data = await res.json();
                 console.log(data)
@@ -39,21 +57,12 @@ export default function GroupFormModal() {
             }
         );
 
-        console.log(newGroup)
+        console.log(editedGroup)
 
-        if (newGroup) {
-            history.push(`/groups/${newGroup.id}`)
-            return closeModal()
+        if (editedGroup) {
+            history.push(`/groups/${editedGroup.id}`)
         }
 
-        // return closeModal
-            // .catch(
-            //     async (res) => {
-            //         const data = await res.json();
-            //         console.log(data)
-            //         if (data && data.error) setErrors(data.error);
-            //     }
-            // );
     };
 
     return (
@@ -163,7 +172,7 @@ export default function GroupFormModal() {
 
                         <span>Is this an in person or online group?</span>
                         <div>
-                            <select onChange={(e) => setType(e.target.value)}>
+                            <select onChange={(e) => setType(e.target.value)} value={type}>
                                 <option value=''>(select one)</option>
                                 <option value='Online'>Online</option>
                                 <option value='In person'>In person</option>
@@ -178,7 +187,7 @@ export default function GroupFormModal() {
 
                         <span>Is this group private or public?</span>
                         <div>
-                            <select onChange={(e) => setGroupPrivate(Boolean(e.target.value))}>
+                            <select onChange={(e) => setGroupPrivate(Boolean(e.target.value))} value={Boolean(groupPrivate)}>
                                 <option value=''>(select one)</option>
                                 <option value={true}>Private</option>
                                 <option value={false}>Public</option>
@@ -198,7 +207,7 @@ export default function GroupFormModal() {
                     </section>
 
                     <section>
-                        <button type="submit">Create group</button>
+                        <button type="submit">Update group</button>
                     </section>
 
                 </form>

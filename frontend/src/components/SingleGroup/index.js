@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import { getOneGroup } from '../../store/groups';
 import './singleGroup.css'
 
@@ -9,17 +9,31 @@ import './singleGroup.css'
 
 export default function SingleGroup() {
     const dispatch = useDispatch();
+    const history = useHistory()
     const { groupId } = useParams();
+
+    // const groupIdInt = parseInt(groupId)
 
     const sessionUser = useSelector(state => state.session.user);
     // console.log(sessionUser)
-
     useEffect(() => {
         dispatch(getOneGroup(groupId))
     }, [groupId, dispatch]);
 
-    const groupObj = useSelector(state=> state.groups.groups.singleGroup)
-    console.log(groupObj)
+
+    const groupObj = useSelector(state => state.groups.groups.singleGroup[groupId])
+    // console.log('----------------------' , groupObj)
+
+    if (!groupObj) {
+        // console.log('-------------group obj bad---------', groupObj)
+        return null;
+    }
+
+    // console.log('***************************', groupObj)
+
+    const handleClick = () => {
+        history.push(`/groups/${groupId}/edit`)
+    }
 
     let userLinks;
     if (!sessionUser) {
@@ -32,7 +46,7 @@ export default function SingleGroup() {
         userLinks = (
             <div>
                 <button>Create Event</button>
-                <button>Update</button>
+                <button onClick={handleClick}>Update</button>
                 <button>Delete</button>
             </div>
         )
@@ -44,22 +58,27 @@ export default function SingleGroup() {
         )
     }
 
-    if (!Object.values(groupObj).length) {
-        return null;
-    }
 
     const checkForPreviewImage = (groupImages) => {
         if (groupImages.length) {
             for (let image of groupImages) {
                 if (image.preview) {
-                    return image.url
+                    return (
+                        <img src={image.url} alt='group logo' className='group-image'></img>
+                    )
                 }
             }
 
-            return groupImages[0].url
+            return (
+                <img src={groupImages[0].url} alt='group logo' className='group-image'></img>
+            )
         }
 
-        return 'No images for this group yet'
+        return (
+            <div className='group-image'>
+                No images for this group yet
+            </div>
+        )
     }
 
     const groupStatus = (groupPrivateOrPublic) => {
@@ -79,7 +98,7 @@ export default function SingleGroup() {
             <span className='groups-span'>🡠<Link to='/groups' className='groups-back-link'>Groups</Link></span>
             <div className='group-header'>
                 <div className='group-header-left'>
-                    <img src={checkForPreviewImage(groupObj.GroupImages)} alt='group logo' className='group-image'></img>
+                    {checkForPreviewImage(groupObj.GroupImages)}
                 </div>
                 <div className='group-header-right'>
                     <div>

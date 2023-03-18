@@ -1,8 +1,8 @@
 import './homepage.css'
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import OpenModalButton from '../OpenModalButton';
-import GroupFormModal from '../Groups/NewGroupModal';
+// import OpenModalButton from '../OpenModalButton';
+// import GroupFormModal from '../Groups/NewGroupModal';
 
 
 
@@ -19,12 +19,9 @@ export default function HomePage() {
         )
     } else {
         userLoggedIn = (
-            <div>
-                <OpenModalButton
-                    buttonText="Start a new group"
-                    modalComponent={<GroupFormModal />}
-                />
-            </div>
+            <Link to='/groups/new' className='active'>
+                Start a new Group
+            </Link>
         )
     }
 
