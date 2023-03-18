@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import { getOneGroup } from '../../store/groups';
 import './singleGroup.css'
 
@@ -9,17 +9,31 @@ import './singleGroup.css'
 
 export default function SingleGroup() {
     const dispatch = useDispatch();
+    const history = useHistory()
     const { groupId } = useParams();
+
+    // const groupIdInt = parseInt(groupId)
 
     const sessionUser = useSelector(state => state.session.user);
     // console.log(sessionUser)
-
     useEffect(() => {
         dispatch(getOneGroup(groupId))
     }, [groupId, dispatch]);
 
-    const groupObj = useSelector(state=> state.groups.groups.singleGroup)
-    console.log(groupObj)
+
+    const groupObj = useSelector(state => state.groups.groups.singleGroup[groupId])
+    // console.log('----------------------' , groupObj)
+
+    if (!groupObj) {
+        // console.log('-------------group obj bad---------', groupObj)
+        return null;
+    }
+
+    // console.log('***************************', groupObj)
+
+    const handleClick = () => {
+        history.push(`/groups/${groupId}/edit`)
+    }
 
     let userLinks;
     if (!sessionUser) {
@@ -32,7 +46,7 @@ export default function SingleGroup() {
         userLinks = (
             <div>
                 <button>Create Event</button>
-                <button>Update</button>
+                <button onClick={handleClick}>Update</button>
                 <button>Delete</button>
             </div>
         )
@@ -44,9 +58,6 @@ export default function SingleGroup() {
         )
     }
 
-    if (!Object.values(groupObj).length) {
-        return null;
-    }
 
     const checkForPreviewImage = (groupImages) => {
         if (groupImages.length) {

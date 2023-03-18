@@ -3,6 +3,7 @@ import { csrfFetch } from './csrf';
 const LOAD = 'groups/LOAD'
 const ONE = 'groups/ONE_GROUP'
 const ADD_GROUP = 'groups/ADD_GROUP'
+// const EDIT = '/groups/:groupId/EDIT'
 
 
 //ACTIONS
@@ -20,6 +21,11 @@ export const addOneGroup = newGroup => ({
     type: ADD_GROUP,
     group: newGroup
 });
+
+// export const editGroup = editedGroup => ({
+//     type: EDIT,
+//     group: editedGroup
+// })
 
 
 
@@ -58,13 +64,29 @@ export const createGroup = (newGroup) => async (dispatch) => {
     }
 };
 
+export const updateGroup = (updatedGroup, groupId) => async (dispatch) => {
+
+    // console.log('==============================', updatedGroup, groupId)
+
+    const response = await csrfFetch(`/api/groups/${groupId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedGroup)
+    });
+
+    if (response.ok) {
+        const group = await response.json();
+        dispatch(addOneGroup(group));
+        return group;
+    }
+};
+
 
 //INITIAL STATE
 const initialState = { groups: {
     allGroups: {},
-    singleGroup: {},
-    Venues: {}
-} }
+    singleGroup: {}
+}}
 
 
 //REDUCER
@@ -77,12 +99,16 @@ const groupsReducer = (state = initialState, action) => {
             return allGroupsState
         case ONE:
             const singleGroupState = {...state};
-            singleGroupState.groups.singleGroup = action.group;
+            // console.log('===========', singleGroupState)
+            singleGroupState.groups.singleGroup[action.group.id] = {...action.group};
+            // console.log(singleGroupState.groups.singleGroup)
             return singleGroupState
         case ADD_GROUP:
             const newGroupState = {...state};
             newGroupState.groups.allGroups[action.group.id] = action.group
             return newGroupState
+        // case EDIT:
+
         default:
             return state;
     }
