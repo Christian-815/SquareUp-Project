@@ -25,6 +25,8 @@ export default function Groups() {
     }
 
     const groups = groupsObj.Groups
+    console.log(groups)
+
 
     const groupStatus = (groupPrivateOrPublic) => {
         if (!groupPrivateOrPublic) {

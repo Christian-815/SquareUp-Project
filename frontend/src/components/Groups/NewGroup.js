@@ -167,10 +167,10 @@ export default function GroupForm() {
 
                         <span>Is this group private or public?</span>
                         <div>
-                            <select onChange={(e) => setGroupPrivate(Boolean(e.target.value))}>
+                            <select onChange={(e) => setGroupPrivate(e.target.value)}>
                                 <option value=''>(select one)</option>
-                                <option value={true}>Private</option>
-                                <option value={false}>Public</option>
+                                <option value='true'>Private</option>
+                                <option value={Boolean(false)}>Public</option>
                             </select>
 
                             <ul className='popup-error'>

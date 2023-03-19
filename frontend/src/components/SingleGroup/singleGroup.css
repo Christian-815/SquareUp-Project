@@ -25,6 +25,7 @@
     flex-direction: row;
     column-gap: 1em;
     height: 15em;
+    width: 100%;
 }
 
 
@@ -33,7 +34,7 @@
 }
 
 .group-header-right {
-    display: flex;
+    display: inline-flex;
     flex-direction: column;
     row-gap: 1em;
     width: 40%;

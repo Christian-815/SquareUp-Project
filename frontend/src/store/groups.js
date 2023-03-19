@@ -3,7 +3,9 @@ import { csrfFetch } from './csrf';
 const LOAD = 'groups/LOAD'
 const ONE = 'groups/ONE_GROUP'
 const ADD_GROUP = 'groups/ADD_GROUP'
-// const EDIT = '/groups/:groupId/EDIT'
+const UPDATE_GROUP = 'group/UPDATE'
+const DELETE = 'group/DELETE'
+
 
 
 //ACTIONS
@@ -22,10 +24,16 @@ export const addOneGroup = newGroup => ({
     group: newGroup
 });
 
-// export const editGroup = editedGroup => ({
-//     type: EDIT,
-//     group: editedGroup
-// })
+export const updateOneGroup = group => ({
+    type: UPDATE_GROUP,
+    group: group
+})
+
+export const deleteOneGroup = group => ({
+    type: DELETE,
+    group: group
+});
+
 
 
 
@@ -76,8 +84,23 @@ export const updateGroup = (updatedGroup, groupId) => async (dispatch) => {
 
     if (response.ok) {
         const group = await response.json();
-        dispatch(addOneGroup(group));
+        dispatch(updateOneGroup(group));
         return group;
+    }
+};
+
+export const deleteGroup = (group, groupId) => async (dispatch) => {
+
+    // console.log('===================IN THU====================', group, groupId)
+
+    const response = await csrfFetch(`/api/groups/${groupId}`, {
+        method: 'DELETE'
+    });
+
+    if (response.ok) {
+        // const group = await response.json();
+        dispatch(deleteOneGroup(group));
+        // return group;
     }
 };
 
@@ -107,8 +130,21 @@ const groupsReducer = (state = initialState, action) => {
             const newGroupState = {...state};
             newGroupState.groups.allGroups[action.group.id] = action.group
             return newGroupState
-        // case EDIT:
-
+        case UPDATE_GROUP:
+            const updatedGroupState = {...state};
+            // console.log(updatedGroupState.groups.allGroups.Groups)
+            updatedGroupState.groups.allGroups.Groups = updatedGroupState.groups.allGroups.Groups.filter(group => group.id !== action.group.id);
+            // console.log(updatedGroupState.groups.allGroups.Groups)
+            updatedGroupState.groups.allGroups.Groups.push(action.group);
+            // console.log(updatedGroupState.groups.allGroups.Groups)
+            return updatedGroupState
+        case DELETE:
+            const deletedGroupState = {...state};
+            // console.log('------------------In Reducer before delete-------------------', deletedGroupState.groups.allGroups.Groups)
+            // delete deletedGroupState.groups.allGroups[action.group.id]
+            deletedGroupState.groups.allGroups.Groups = deletedGroupState.groups.allGroups.Groups.filter(group => group.id !== action.group.id)
+            // console.log('-----------------In Reducer after delete--------------------', deletedGroupState.groups.allGroups.Groups)
+            return deletedGroupState
         default:
             return state;
     }

@@ -1,7 +1,7 @@
 import './newGroup.css'
 import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { getAllGroups, updateGroup } from '../../store/groups';
 
 export default function UpdateGroup({groups}) {
@@ -10,7 +10,8 @@ export default function UpdateGroup({groups}) {
     const {groupId} = useParams();
 
     const currentGroup = groups.Groups.filter(group => group.id === parseInt(groupId))[0]
-    console.log(currentGroup)
+    console.log('CURRENT GROUP', currentGroup.private)
+
 
     const [errors, setErrors] = useState({});
     const [name, setName] = useState(currentGroup.name)
@@ -18,7 +19,9 @@ export default function UpdateGroup({groups}) {
     const [city, setCity] = useState(currentGroup.city)
     const [state, setState] = useState(currentGroup.state)
     const [type, setType] = useState(currentGroup.type)
-    const [groupPrivate, setGroupPrivate] = useState(currentGroup.groupPrivate)
+    const [groupPrivate, setGroupPrivate] = useState(currentGroup.private)
+    console.log('SETTING GROUP', groupPrivate)
+
 
 
     useEffect(() => {
@@ -187,10 +190,10 @@ export default function UpdateGroup({groups}) {
 
                         <span>Is this group private or public?</span>
                         <div>
-                            <select onChange={(e) => setGroupPrivate(Boolean(e.target.value))} value={Boolean(groupPrivate)}>
+                            <select onChange={(e) => setGroupPrivate(e.target.value)} defaultValue={Boolean(groupPrivate)}>
                                 <option value=''>(select one)</option>
-                                <option value={true}>Private</option>
-                                <option value={false}>Public</option>
+                                <option value='true'>Private</option>
+                                <option value={Boolean(false)}>Public</option>
                             </select>
 
                             <ul className='popup-error'>
