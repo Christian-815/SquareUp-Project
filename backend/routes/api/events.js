@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Event, Membership, Group, User, Venue, Attendance, EventImage } = require('../../db/models');
+const { Event, Membership, Group, User, Venue, Attendance, EventImage, GroupImage } = require('../../db/models');
 const { Op } = require('sequelize');
 const { check, query } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
@@ -91,7 +91,7 @@ router.get('/', validateEventsQueries, async (req, res) => {
 
     const events = await Event.findAll({
         attributes: {
-            exclude: ['description', 'capacity', 'price', 'createdAt', 'updatedAt']
+            exclude: ['capacity', 'price', 'createdAt', 'updatedAt']
         },
         where,
         raw: true,
@@ -191,13 +191,30 @@ router.get('/:eventId', async (req, res) => {
     event.numAttending = attendees;
 
     const groupAttending = await Group.findOne({
-        attributes: ['id', 'name', 'private', 'city', 'state'],
+        attributes: ['id', 'organizerId', 'name', 'private', 'city', 'state'],
         where: {
             id: event.groupId
         }
     });
 
     event.Group = groupAttending;
+
+    const groupAttendingImage = await GroupImage.findOne({
+        where: {
+            [Op.and]: [
+                { groupId: event.groupId },
+                { preview: true }
+            ]
+        }
+    });
+
+    if (groupAttendingImage) {
+        event.GroupImage = groupAttendingImage
+    }
+
+    const eventOrganizer = await User.findByPk(groupAttending.organizerId);
+
+    event.Host = eventOrganizer
 
     const eventVenue = await Venue.findOne({
         attributes: ['id', 'address', 'city', 'state', 'lat', 'lng'],
