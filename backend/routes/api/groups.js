@@ -311,13 +311,13 @@ router.put('/:groupId', validateNewGroup, async (req, res) => {
         })
     };
 
-    const { name, about, type, private, city, state } = req.body;
+    const { name, about, type, groupPrivate, city, state } = req.body;
 
     group.update({
         name: name,
         about: about,
         type: type,
-        private: private,
+        private: groupPrivate,
         city: city,
         state: state
     });

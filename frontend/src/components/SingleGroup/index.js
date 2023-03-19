@@ -2,6 +2,8 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { getOneGroup } from '../../store/groups';
+import DeleteGroupModal from '../DeleteGroupModal';
+import OpenModalButton from '../OpenModalButton';
 import './singleGroup.css'
 
 
@@ -31,9 +33,10 @@ export default function SingleGroup() {
 
     // console.log('***************************', groupObj)
 
-    const handleClick = () => {
+    const handleUpdateClick = () => {
         history.push(`/groups/${groupId}/edit`)
     }
+
 
     let userLinks;
     if (!sessionUser) {
@@ -46,8 +49,13 @@ export default function SingleGroup() {
         userLinks = (
             <div>
                 <button>Create Event</button>
-                <button onClick={handleClick}>Update</button>
-                <button>Delete</button>
+                <button onClick={handleUpdateClick}>Update</button>
+                <button>
+                    <OpenModalButton
+                        buttonText="Delete"
+                        modalComponent={<DeleteGroupModal groupId={groupId}/>}
+                    />
+                </button>
             </div>
         )
     } else {
