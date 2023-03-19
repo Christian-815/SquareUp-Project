@@ -3,12 +3,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { Switch, Route } from "react-router-dom";
 import * as sessionActions from "./store/session";
 import * as groupActions from './store/groups';
+import * as eventActions from './store/events';
 import Navigation from "./components/Navigation";
 import HomePage from "./components/Home";
 import Groups from "./components/Groups";
 import SingleGroup from "./components/SingleGroup";
 import GroupForm from "./components/Groups/NewGroup";
 import UpdateGroup from "./components/Groups/UpdateGroup";
+import Events from "./components/Events";
+import SingleEvent from "./components/SingleEvent";
 
 function App() {
   const dispatch = useDispatch();
@@ -16,12 +19,15 @@ function App() {
   useEffect(() => {
     dispatch(sessionActions.restoreUser()).then(() => setIsLoaded(true));
     dispatch(groupActions.getAllGroups())
+    dispatch(eventActions.getAllEvents())
   }, [dispatch]);
 
   const groups = useSelector(state => state.groups.groups.allGroups)
   // console.log(groups)
-  if (!Object.values(groups).length) {
-    // console.log('-------------group obj bad---------', groupObj)
+  const events = useSelector(state=> state.events.Events.allEvents)
+  // console.log(events)
+  if (!Object.values(groups).length || !Object.values(events).length) {
+    // console.log('-------------group obj bad---------')
     return null;
   }
 
@@ -44,6 +50,13 @@ function App() {
           </Route>
           <Route path='/groups/:groupId/edit' exact>
             <UpdateGroup groups={groups}/>
+          </Route>
+
+          <Route path='/events' exact>
+            <Events />
+          </Route>
+          <Route path='/events/:eventId' exact>
+            <SingleEvent />
           </Route>
         </Switch>
       )}

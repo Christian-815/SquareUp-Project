@@ -24,7 +24,7 @@ export default function SingleGroup() {
 
 
     const groupObj = useSelector(state => state.groups.groups.singleGroup[groupId])
-    console.log('----------------------' , groupObj)
+    // console.log('----------------------' , groupObj)
 
     if (!groupObj) {
         // console.log('-------------group obj bad---------', groupObj)
