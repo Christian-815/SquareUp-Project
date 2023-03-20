@@ -17,21 +17,21 @@ export default function SingleEvent() {
     // const eventIdInt = parseInt(eventId)
 
     const sessionUser = useSelector(state => state.session.user);
-    // console.log(sessionUser)
+    //
     useEffect(() => {
         dispatch(getOneEvent(eventId))
     }, [eventId, dispatch]);
 
 
     const eventObj = useSelector(state => state.events.Events.singleEvent[eventId])
-    // console.log('----------EVENT OBJECT--------------------------', eventObj)
+    //
 
     if (!eventObj) {
-        // console.log('-------------event obj bad---------', eventObj)
+        //
         return null;
     }
 
-    // console.log('***************************', eventObj)
+    //
 
     // const handleUpdateClick = () => {
     //     history.push(`/events/${eventId}/edit`)
@@ -46,8 +46,8 @@ export default function SingleEvent() {
     } else if (sessionUser.id === eventObj.Host.id) {
         userLinks = (
             <div className='owner-interact'>
-                <button>Update Event</button>
-                <button>
+                <button className='event-buttons' onClick={() => alert('Feature coming soon!')}>Update Event</button>
+                <button className='event-buttons'>
                     <OpenModalButton
                         buttonText="Delete"
                         modalComponent={<DeleteEventModal eventId={eventId} />}

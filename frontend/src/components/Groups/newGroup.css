@@ -1,18 +1,49 @@
-/* .new-group-form {
-    position: fixed;
-    padding: 0;
-    margin-right: 1em;
-    top: 5em;
-    left: 0.1em;
-    width: 100%;
-    height: 100%;
-    background: white;
-} */
-
 .new-group-page {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     margin-left: 3em;
     margin-right: 3em;
+    /* row-gap: 1em; */
+    font-family: 'Oswald', sans-serif;
 }
+
+.become-organizer {
+    color: #007791;
+}
+
+.new-group-header {
+    border-bottom: medium solid lightgray;
+}
+
+.new-group-form {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1em;
+    justify-content: space-around;
+    align-content: center;
+}
+
+.new-group-section {
+    border-bottom: medium solid lightgray;
+    padding-bottom: 2em;
+}
+
+.citystate-input {
+    display: flex;
+    column-gap: 0.5em;
+}
+
+/* .input-box {
+    position: relative;
+    top: 1em;
+} */
+
+input[type="text"], select, input[type='datetime-local'] {
+    background-color: #d1d1d1;
+}
+
+/* .new-group-about {
+    padding-bottom: 5em;
+    line-height: 150%;
+} */

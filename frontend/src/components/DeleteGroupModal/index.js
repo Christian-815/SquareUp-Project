@@ -5,17 +5,17 @@ import { useModal } from "../../context/Modal";
 import { deleteGroup } from "../../store/groups";
 
 
-export default function DeleteGroupModal({groupId}) {
+export default function DeleteGroupModal({ groupId }) {
     const { closeModal } = useModal();
     const dispatch = useDispatch();
     const history = useHistory();
-    console.log(parseInt(groupId))
+
 
 
     const groupObj = useSelector(state => state.groups.groups.allGroups)
 
     const group = groupObj.Groups.filter(group => group.id === parseInt(groupId))
-    console.log('-----------group-----------', group)
+
 
     const handleNoClick = (e) => {
         e.preventDefault();

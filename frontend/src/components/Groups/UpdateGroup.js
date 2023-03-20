@@ -1,16 +1,15 @@
 import './newGroup.css'
 import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from 'react-router-dom';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getAllGroups, updateGroup } from '../../store/groups';
 
-export default function UpdateGroup({groups}) {
+export default function UpdateGroup({ groups }) {
     const dispatch = useDispatch();
     const history = useHistory();
-    const {groupId} = useParams();
+    const { groupId } = useParams();
 
     const currentGroup = groups.Groups.filter(group => group.id === parseInt(groupId))[0]
-    console.log('CURRENT GROUP', currentGroup.private)
 
 
     const [errors, setErrors] = useState({});
@@ -20,7 +19,7 @@ export default function UpdateGroup({groups}) {
     const [state, setState] = useState(currentGroup.state)
     const [type, setType] = useState(currentGroup.type)
     const [groupPrivate, setGroupPrivate] = useState(currentGroup.private)
-    console.log('SETTING GROUP', groupPrivate)
+    //
 
 
 
@@ -28,16 +27,20 @@ export default function UpdateGroup({groups}) {
         dispatch(getAllGroups())
     }, [dispatch]);
 
+    const sessionUser = useSelector(state => state.session.user);
+    if (!sessionUser || sessionUser.id !== currentGroup.organizerId) {
+        return history.push('/')
+    }
 
     // const groupObj = useSelector(state => state.groups.groups.allGroups)
-    // // console.log('----------------------' , groupObj)
+    // //
     // if (!Object.values(groupObj).length) {
-    //     // console.log('-------------group obj bad---------', groupObj)
+    //     //
     //     return null;
     // }
 
     // const group = groupObj.Groups.filter(group => group.id === parseInt(groupId))[0]
-    // // console.log('-----------group-----------', group)
+    // //
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -55,12 +58,12 @@ export default function UpdateGroup({groups}) {
         let editedGroup = await dispatch(updateGroup(payload, groupId)).catch(
             async (res) => {
                 const data = await res.json();
-                console.log(data)
+
                 if (data && data.error) setErrors(data.error);
             }
         );
 
-        console.log(editedGroup)
+
 
         if (editedGroup) {
             history.push(`/groups/${editedGroup.id}`)

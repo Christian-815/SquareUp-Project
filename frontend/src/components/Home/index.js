@@ -1,6 +1,8 @@
 import './homepage.css'
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import OpenModalButton from '../OpenModalButton';
+import SignupFormModal from '../SignupFormModal';
 // import OpenModalButton from '../OpenModalButton';
 // import GroupFormModal from '../Groups/NewGroupModal';
 
@@ -25,6 +27,22 @@ export default function HomePage() {
         )
     }
 
+    let joinSquareUp;
+    if (!sessionUser) {
+        joinSquareUp = (
+            <div>
+                <button className='join-squareUp'>
+                    <div className='login-signup'>
+                        <OpenModalButton
+                            buttonText="Join SquareUp"
+                            modalComponent={<SignupFormModal />}
+                        />
+                    </div>
+                </button>
+            </div>
+        )
+    }
+
 
 
 
@@ -40,22 +58,23 @@ export default function HomePage() {
                 </div>
             </div>
 
-            <div>
-                <h2 className='how-works'>How SquareUp works</h2>
+            <div className='how-works'>
+                <h2>How SquareUp works</h2>
                 <p className='explanation'>Meet new people who share your interests through online and in-person events. It’s free to create an account.</p>
             </div>
 
             <div className='redirects-images'>
-                <div>
-                    <img className='intro-img' src='https://t4.ftcdn.net/jpg/03/61/03/95/360_F_361039511_WEAbESzXvHFnoILX9GFLerq0sFqYbHMy.jpg' alt='see groups logo'></img>
+                <div className='homepage-images'>
+                    <img className='intro-img' src='https://png.pngitem.com/pimgs/s/361-3612991_fighters-gaming-logo-fighters-logo-hd-png-download.png' alt='see groups logo'></img>
                 </div>
-                <div>
+                <div className='homepage-images'>
                     <img className='intro-img' src='https://t4.ftcdn.net/jpg/03/61/03/95/360_F_361039511_WEAbESzXvHFnoILX9GFLerq0sFqYbHMy.jpg' alt='see events logo'></img>
                 </div>
-                <div>
-                    <img className='intro-img' src='https://t4.ftcdn.net/jpg/03/61/03/95/360_F_361039511_WEAbESzXvHFnoILX9GFLerq0sFqYbHMy.jpg' alt='create group logo'></img>
+                <div className='homepage-images'>
+                    <img className='intro-img' src='https://img0-placeit-net.s3-accelerate.amazonaws.com/uploads/stage/stage_image/38809/optimized_large_thumb_stage.jpg' alt='create group logo'></img>
                 </div>
             </div>
+
             <div className='redirects-links'>
                 <div>
                     <Link to='/groups' className='active'>See all groups</Link>
@@ -66,6 +85,10 @@ export default function HomePage() {
                 <div>
                     <div>{userLoggedIn}</div>
                 </div>
+            </div>
+
+            <div className='redirects-links'>
+                {joinSquareUp}
             </div>
         </div>
 

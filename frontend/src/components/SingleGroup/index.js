@@ -17,21 +17,21 @@ export default function SingleGroup() {
     // const groupIdInt = parseInt(groupId)
 
     const sessionUser = useSelector(state => state.session.user);
-    // console.log(sessionUser)
+    //
     useEffect(() => {
         dispatch(getOneGroup(groupId))
     }, [groupId, dispatch]);
 
 
     const groupObj = useSelector(state => state.groups.groups.singleGroup[groupId])
-    // console.log('----------------------' , groupObj)
+    //
 
     if (!groupObj) {
-        // console.log('-------------group obj bad---------', groupObj)
+        //
         return null;
     }
 
-    // console.log('***************************', groupObj)
+    //
 
     const handleUpdateClick = () => {
         history.push(`/groups/${groupId}/edit`)
@@ -45,7 +45,6 @@ export default function SingleGroup() {
     if (!sessionUser) {
         userLinks = (
             <div>
-                <button>Join this group</button>
             </div>
         )
     } else if (sessionUser.id === groupObj.organizerId) {
@@ -58,7 +57,7 @@ export default function SingleGroup() {
                 <button className='group-buttons'>
                     <OpenModalButton
                         buttonText="Delete"
-                        modalComponent={<DeleteGroupModal groupId={groupId}/>}
+                        modalComponent={<DeleteGroupModal groupId={groupId} />}
                     />
                 </button>
             </div>
@@ -66,7 +65,7 @@ export default function SingleGroup() {
     } else {
         userLinks = (
             <div>
-                <button className='join-button'>Join this group</button>
+                <button className='join-button' onClick={() => alert('Feature coming soon!')}>Join this group</button>
             </div>
         )
     }
@@ -104,10 +103,10 @@ export default function SingleGroup() {
 
     const today = new Date();
     today.setMinutes(today.getMinutes() - today.getTimezoneOffset())
-    // console.log(today)
+    //
 
     const turnDateToProperTime = (date) => {
-        const properDate = date.substring(0,16);
+        const properDate = date.substring(0, 16);
         const eventDate = properDate.replace('T', ' • ')
 
         return eventDate
@@ -124,7 +123,7 @@ export default function SingleGroup() {
         const upcomingEvents = [];
         const pastEvents = [];
 
-        groupObj.Events.forEach(event=> {
+        groupObj.Events.forEach(event => {
             const eventStartDate = new Date(event.startDate)
             if (eventStartDate.getTime() <= today.getTime()) {
                 pastEvents.push(event)

@@ -74,7 +74,7 @@ export const createEvent = (newEvent) => async (dispatch) => {
 
 // export const updateEvent = (updatedEvent, EventId) => async (dispatch) => {
 
-//     // console.log('==============================', updatedEvent, EventId)
+//     //
 
 //     const response = await csrfFetch(`/api/Events/${EventId}`, {
 //         method: 'PUT',
@@ -91,7 +91,7 @@ export const createEvent = (newEvent) => async (dispatch) => {
 
 export const deleteEvent = (event, eventId) => async (dispatch) => {
 
-    // console.log('===================IN THU====================', event, eventId)
+    //
 
     const response = await csrfFetch(`/api/events/${eventId}`, {
         method: 'DELETE'
@@ -141,9 +141,9 @@ const EventsReducer = (state = initialState, action) => {
             return allEventsState
         case ONE:
             const singleEventState = { ...state };
-            // console.log('===========', singleEventState)
+            //
             singleEventState.Events.singleEvent[action.event.id] = { ...action.event };
-            // console.log(singleEventState.Events.singleEvent)
+            //
             return singleEventState
         case ADD_EVENT:
             const newEventState = { ...state };
@@ -151,18 +151,18 @@ const EventsReducer = (state = initialState, action) => {
             return newEventState
         // case UPDATE_EVENT:
         //     const updatedEventState = { ...state };
-        //     // console.log(updatedEventState.Events.allEvents.Events)
+        //     //
         //     updatedEventState.Events.allEvents.Events = updatedEventState.Events.allEvents.Events.filter(Event => Event.id !== action.event.id);
-        //     // console.log(updatedEventState.Events.allEvents.Events)
+        //     //
         //     updatedEventState.Events.allEvents.Events.push(action.event);
-        //     // console.log(updatedEventState.Events.allEvents.Events)
+        //     //
         //     return updatedEventState
         case DELETE:
             const deletedEventState = { ...state };
-            // console.log('------------------In Reducer before delete-------------------', deletedEventState.Events.allEvents.Events)
+            //
             // delete deletedEventState.Events.allEvents[action.event.id]
             deletedEventState.Events.allEvents.Events = deletedEventState.Events.allEvents.Events.filter(Event => Event.id !== action.event.id)
-            // console.log('-----------------In Reducer after delete--------------------', deletedEventState.Events.allEvents.Events)
+            //
             return deletedEventState
         default:
             return state;

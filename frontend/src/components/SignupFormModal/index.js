@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
 import { useModal } from "../../context/Modal";
 import * as sessionActions from "../../store/session";
 import './SignupForm.css';
 
 function SignupFormModal() {
     const dispatch = useDispatch();
+    const history = useHistory();
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
     const [firstName, setFirstName] = useState("");
@@ -13,7 +15,14 @@ function SignupFormModal() {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [errors, setErrors] = useState({});
+    const [disabled, setDisabled] = useState(true)
     const { closeModal } = useModal();
+
+    useEffect(() => {
+        if (username.length >= 4 && password.length >= 6 && password === confirmPassword && firstName.length && lastName.length && email.length) {
+            setDisabled(false)
+        }
+    }, [email, username, firstName, lastName, password, confirmPassword])
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -21,11 +30,12 @@ function SignupFormModal() {
             setErrors({});
             return dispatch(sessionActions.signup({ email, username, firstName, lastName, password }))
                 .then(closeModal)
+                .then(history.push('/'))
                 .catch(async (res) => {
                     const data = await res.json();
-                    // console.log(data)
+                    //
                     if (data && data.error) setErrors(data.error);
-                    // console.log(errors)
+                    //
                 });
         }
         return setErrors({
@@ -40,7 +50,7 @@ function SignupFormModal() {
                     <i className="fa-solid fa-gamepad"></i>
                 </div>
                 <h1 className="popup-header">Sign Up</h1>
-                <form onSubmit={handleSubmit}>
+                <form className="signup-form" onSubmit={handleSubmit}>
                     <label className='input-title'>
                         Email
                         <input
@@ -116,7 +126,7 @@ function SignupFormModal() {
                             className='input-box'
                         />
                     </label>
-                    <button type="submit" className="popup-submit-button">Sign Up</button>
+                    <button type="submit" className="popup-submit-button" disabled={disabled}>Sign Up</button>
                 </form>
             </div>
         </>

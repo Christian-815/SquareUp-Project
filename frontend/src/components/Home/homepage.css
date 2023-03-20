@@ -10,21 +10,33 @@
 
 .how-works {
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
 }
 
 .explanation {
-    display: flex;
-    justify-content: center;
-    /* height: auto; */
-    /* width: 20em; */
-    /* margin-left: auto;
-    margin-right: auto;
-    width: 100%; */
+    position: relative;
+    top: -1em;
+    width: 35em;
+    text-align: center;
 }
 
 .intro-text {
     font-size: 2.5em;
+}
+
+.homepage-images {
+    height: 100%;
+}
+
+.redirects-images {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    column-gap: 2em;
+    width: 100%;
+    height: 15em;
 }
 
 .intro-img {
@@ -33,23 +45,11 @@
     object-fit: cover;
 }
 
-.redirects-images {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    column-gap: 8em;
-    /* padding: 1em 5em 0em 5em; */
-    /* margin: auto; */
-}
-
 .redirects-links {
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
-    column-gap: 15em;
     font-size: 15px;
-    /* padding: 1em 5em 0em 5em; */
-    /* margin: auto; */
 }
 
 .active {
@@ -63,10 +63,13 @@
     text-decoration: underline;
 }
 
-/* .redirects-links {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    column-gap: 8em;
-    padding: 1em 5em 0em 5em;
-} */
+.join-squareUp {
+    position: relative;
+    top: 3em;
+    padding: 1em 1.5em;
+    background-color: #D2042D;
+    color: white;
+    box-shadow: 3px 3px 3px black;
+    font-family: 'Oswald', sans-serif;
+    border-radius: 0.7em;
+}

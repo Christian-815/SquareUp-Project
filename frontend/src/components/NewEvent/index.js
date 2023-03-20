@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import { addNewEventImage, createEvent } from "../../store/events";
+import './NewEvent.css'
 
 export default function EventForm() {
     const dispatch = useDispatch();
@@ -9,17 +10,17 @@ export default function EventForm() {
     const { groupid } = useParams();
 
     const groupsObj = useSelector(state => state.groups.groups.allGroups.Groups)
-    // console.log(groupsObj)
+    //
     const group = groupsObj.filter(group => group.id === parseInt(groupid))
-    // console.log(group)
+    //
 
     const today = new Date();
     today.setMinutes(today.getMinutes() - today.getTimezoneOffset())
-    const todayDate = today.toISOString().substring(0,16)
+    const todayDate = today.toISOString().substring(0, 16)
 
     const datePast = new Date()
     datePast.setMinutes(datePast.getMinutes() - datePast.getTimezoneOffset() + 60)
-    const pastDate = datePast.toISOString().substring(0,16)
+    const pastDate = datePast.toISOString().substring(0, 16)
 
 
     const [errors, setErrors] = useState({});
@@ -55,12 +56,12 @@ export default function EventForm() {
         let newEvent = await dispatch(createEvent(payload)).catch(
             async (res) => {
                 const data = await res.json();
-                console.log(data)
+
                 if (data && data.errors) setErrors(data.errors);
             }
         );
 
-        console.log(newEvent)
+
 
         if (!eventImage) {
             setEventImage('image.png')
@@ -105,14 +106,14 @@ export default function EventForm() {
     }
 
     return (
-        <div className="new-group-form">
-            <div className="new-group-page">
-                <div>
+        <div className="new-event-page">
+            <div>
+                <div className="new-event-header">
                     <h3>Create an Event for {group[0].name}</h3>
                 </div>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} className='new-event-form'>
 
-                    <section>
+                    <section className='new-event-section'>
                         <div>
                             <div>
                                 What is the name of your event?
@@ -128,7 +129,7 @@ export default function EventForm() {
                             />
                         </div>
 
-                        <ul className='popup-error'>
+                        <ul className='event-popup-error'>
                             {errors.name && (
                                 <li key={errors.name}>{errors.name}</li>
                             )}
@@ -136,7 +137,7 @@ export default function EventForm() {
 
                     </section>
 
-                    <section>
+                    <section className='new-event-section'>
 
                         <div>Is this an in person or online group?</div>
                         <div>
@@ -146,7 +147,7 @@ export default function EventForm() {
                                 <option value='In person'>In person</option>
                             </select>
 
-                            <ul className='popup-error'>
+                            <ul className='event-popup-error'>
                                 {errors.type && (
                                     <li key={errors.type}>{errors.type}</li>
                                 )}
@@ -163,7 +164,7 @@ export default function EventForm() {
                             />
                         </div>
 
-                        <ul className='popup-error'>
+                        <ul className='event-popup-error'>
                             {errors.price && (
                                 <li key={errors.price}>{errors.price}</li>
                             )}
@@ -171,7 +172,7 @@ export default function EventForm() {
 
                     </section>
 
-                    <section>
+                    <section className='new-event-section'>
 
                         <div>
                             <div>
@@ -186,7 +187,7 @@ export default function EventForm() {
                                 onChange={(e) => setStartDate(e.target.value)}
                             />
                         </div>
-                        <ul className='popup-error'>
+                        <ul className='event-popup-error'>
                             {timeErrors.startDate && (
                                 <li key={timeErrors.startDate}>{timeErrors.startDate}</li>
                             )}
@@ -206,7 +207,7 @@ export default function EventForm() {
                             />
                         </div>
 
-                        <ul className='popup-error'>
+                        <ul className='event-popup-error'>
                             {timeErrors.endDate && (
                                 <li key={timeErrors.endDate}>{timeErrors.endDate}</li>
                             )}
@@ -214,7 +215,7 @@ export default function EventForm() {
 
                     </section>
 
-                    <section>
+                    <section className='new-event-section'>
                         <div>
                             <div>
                                 Please add in image url for your event below:
@@ -236,7 +237,7 @@ export default function EventForm() {
 
                         {/* {checkImageError(() => checkEventImage(eventImage))} */}
 
-                        <ul className='popup-error'>
+                        <ul className='event-popup-error'>
                             {imageError.imgError && (
                                 <li key={imageError.imgError}>{imageError.imgError}</li>
                             )}
@@ -244,7 +245,7 @@ export default function EventForm() {
 
                     </section>
 
-                    <section>
+                    <section className='new-event-section'>
                         <div>
                             Please describe your event:
                         </div>
@@ -255,10 +256,11 @@ export default function EventForm() {
                                 placeholder="Please write at least 30 characters"
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
+                                size={35}
                             />
                         </div>
 
-                        <ul className='popup-error'>
+                        <ul className='event-popup-error'>
                             {errors.description && (
                                 <li key={errors.description}>{errors.description}</li>
                             )}
@@ -268,7 +270,7 @@ export default function EventForm() {
 
 
                     <section>
-                        <button type="submit">Create Event</button>
+                        <button type="submit" className='join-squareUp'>Create Event</button>
                     </section>
 
                 </form>
