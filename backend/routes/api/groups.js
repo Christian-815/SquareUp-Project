@@ -92,6 +92,15 @@ router.get('/', async (req, res) => {
     };
 
     for (let group of groups) {
+        const numEvents = await Event.count({
+            where: {
+                groupId: group.id
+            }
+        })
+        group.numEvents = numEvents
+    };
+
+    for (let group of groups) {
         const previewImage = await GroupImage.findOne({
             where: {
                 [Op.and]: [
@@ -213,7 +222,8 @@ router.get('/:groupId', async (req, res) => {
     group.Events = await Event.findAll({
         where: {
             groupId: req.params.groupId
-        }
+        },
+        include: EventImage
     });
 
 

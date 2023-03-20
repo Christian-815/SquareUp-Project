@@ -26,13 +26,13 @@ function Navigation({ isLoaded }) {
     } else {
         sessionLinks = (
             <div className='user-loginSignup'>
-                <div>
+                <div className='login-signup'>
                     <OpenModalButton
                         buttonText="Log In"
                         modalComponent={<LoginFormModal />}
                     />
                 </div>
-                <div>
+                <div className='login-signup'>
                     <OpenModalButton
                         buttonText="Sign Up"
                         modalComponent={<SignupFormModal />}

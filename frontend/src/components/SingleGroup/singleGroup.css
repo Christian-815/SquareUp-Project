@@ -6,6 +6,7 @@
     width: 50em;
     /* height: 100vh; */
     margin: auto;
+    overflow: hidden;
 }
 
 .groups-span {
@@ -26,6 +27,8 @@
     column-gap: 1em;
     height: 15em;
     width: 100%;
+    padding-bottom: 1em;
+    border-bottom: medium solid lightgray;
 }
 
 
@@ -42,6 +45,24 @@
     justify-content: space-between;
 }
 
+.group-button-div {
+    display: flex;
+    column-gap: 0.5em;
+}
+
+.group-buttons {
+    background-color: #36454F;
+    color: white;
+    box-shadow: 2px 2px 3px black;
+}
+
+.join-button {
+    padding: 0.5em 1em;
+    background-color: red;
+    color: white;
+    box-shadow: 2px 2px 3px black;
+}
+
 .group-name {
     color: black;
 }
@@ -51,4 +72,73 @@
     flex-direction: column;
     align-self: flex-start;
     row-gap: 2em;
+}
+
+.group-description-parts {
+    border-bottom: medium solid lightgray;
+}
+
+.description-header {
+    position: relative;
+    top: -0.8em;
+}
+
+.desciption-subber-organizer {
+    position: relative;
+    top: -2em;
+    color: #36454F;
+}
+
+.desciption-subber {
+    position: relative;
+    top: -0.8em;
+}
+
+/* event css */
+
+.events-section {
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+    row-gap: 1em;
+}
+
+.indiv-group-event {
+    background-color: lightgray;
+    height: 11em;
+    border-radius: 1em;
+    cursor: pointer;
+}
+
+.indiv-event-display {
+    display: flex;
+    flex-direction: row;
+    margin: 1em 1em;
+    column-gap: 1em;
+    height: 45%;
+}
+
+.indiv-event-display-left {
+    width: 35%;
+}
+
+.indiv-event-display-right {
+    width: 65%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.event-title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.event-location {
+    font-size: smaller;
+}
+
+.indiv-event-description {
+    margin: 1em 1em;
+    overflow: auto;
 }

@@ -31,6 +31,8 @@
     column-gap: 1em;
     height: 20em;
     width: 100%;
+    border-bottom: medium solid lightgray;
+    padding-bottom: 1em;
 }
 
 .event-header-left {
@@ -68,6 +70,7 @@
     background-color: lightgray;
     height: 30%;
     border-radius: 1em;
+    cursor: pointer;
 }
 .event-group-left {
     display: inline-flex;

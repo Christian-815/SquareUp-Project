@@ -41,7 +41,6 @@ export default function SingleGroup() {
         history.push(`/groups/${groupId}/events/new`)
     }
 
-
     let userLinks;
     if (!sessionUser) {
         userLinks = (
@@ -51,12 +50,12 @@ export default function SingleGroup() {
         )
     } else if (sessionUser.id === groupObj.organizerId) {
         userLinks = (
-            <div>
-                <button onClick={handleEventClick}>
+            <div className='group-button-div'>
+                <button className='group-buttons' onClick={handleEventClick}>
                     Create Event
                 </button>
-                <button onClick={handleUpdateClick}>Update</button>
-                <button>
+                <button className='group-buttons' onClick={handleUpdateClick}>Update</button>
+                <button className='group-buttons'>
                     <OpenModalButton
                         buttonText="Delete"
                         modalComponent={<DeleteGroupModal groupId={groupId}/>}
@@ -67,7 +66,7 @@ export default function SingleGroup() {
     } else {
         userLinks = (
             <div>
-                <button>Join this group</button>
+                <button className='join-button'>Join this group</button>
             </div>
         )
     }
@@ -105,19 +104,26 @@ export default function SingleGroup() {
 
     const today = new Date();
     today.setMinutes(today.getMinutes() - today.getTimezoneOffset())
-    console.log(today)
+    // console.log(today)
+
+    const turnDateToProperTime = (date) => {
+        const properDate = date.substring(0,16);
+        const eventDate = properDate.replace('T', ' • ')
+
+        return eventDate
+    }
 
     let eventsList;
     if (!groupObj.Events.length) {
         eventsList = (
             <div>
-                <h2>No Upcoming Events</h2>
+                <h2 className='description-header'>No Upcoming Events</h2>
             </div>
         )
     } else {
         const upcomingEvents = [];
         const pastEvents = [];
-        console.log(groupObj.Events)
+
         groupObj.Events.forEach(event=> {
             const eventStartDate = new Date(event.startDate)
             if (eventStartDate.getTime() <= today.getTime()) {
@@ -125,7 +131,101 @@ export default function SingleGroup() {
             } else {
                 upcomingEvents.push(event)
             }
-        })
+        });
+
+        if (pastEvents.length && upcomingEvents.length) {
+            eventsList = (
+                <div>
+                    <h2 className='description-header'>Upcoming Events ({upcomingEvents.length})</h2>
+                    <section className='events-section'>
+                        {upcomingEvents.map(event => (
+                            <div className='indiv-group-event' onClick={() => history.push(`/events/${event.id}`)}>
+                                <div className='indiv-event-display'>
+                                    <div className='indiv-event-display-left'>
+                                        {checkForPreviewImage(event.EventImages)}
+                                    </div>
+                                    <div className='indiv-event-display-right'>
+                                        <div className='event-time'>{turnDateToProperTime(event.startDate)}</div>
+                                        <div className='event-title'>{event.name}</div>
+                                        <div className='event-location'>{groupObj.city}, {groupObj.state}</div>
+                                    </div>
+                                </div>
+
+                                <div className='indiv-event-description'>{event.description}</div>
+                            </div>
+                        ))}
+                    </section>
+
+                    <h2>Past Events ({pastEvents.length})</h2>
+                    <section className='events-section'>
+                        {pastEvents.map(event => (
+                            <div className='indiv-group-event' onClick={() => history.push(`/events/${event.id}`)}>
+                                <div className='indiv-event-display'>
+                                    <div className='indiv-event-display-left'>
+                                        {checkForPreviewImage(event.EventImages)}
+                                    </div>
+                                    <div className='indiv-event-display-right'>
+                                        <div className='event-time'>{turnDateToProperTime(event.startDate)}</div>
+                                        <div className='event-title'>{event.name}</div>
+                                        <div className='event-location'>{groupObj.city}, {groupObj.state}</div>
+                                    </div>
+                                </div>
+
+                                <div className='indiv-event-description'>{event.description}</div>
+                            </div>
+                        ))}
+                    </section>
+                </div>
+            )
+        } else if (!pastEvents.length && upcomingEvents.length) {
+            eventsList = (
+                <div>
+                    <h2 className='description-header'>Upcoming Events ({upcomingEvents.length})</h2>
+                    <section className='events-section'>
+                        {upcomingEvents.map(event => (
+                            <div className='indiv-group-event' onClick={() => history.push(`/events/${event.id}`)}>
+                                <div className='indiv-event-display'>
+                                    <div className='indiv-event-display-left'>
+                                        {checkForPreviewImage(event.EventImages)}
+                                    </div>
+                                    <div className='indiv-event-display-right'>
+                                        <div className='event-time'>{turnDateToProperTime(event.startDate)}</div>
+                                        <div className='event-title'>{event.name}</div>
+                                        <div className='event-location'>{groupObj.city}, {groupObj.state}</div>
+                                    </div>
+                                </div>
+
+                                <div className='indiv-event-description'>{event.description}</div>
+                            </div>
+                        ))}
+                    </section>
+                </div>
+            )
+        } else {
+            eventsList = (
+                <div>
+                    <h2 className='description-header'>Past Events ({pastEvents.length})</h2>
+                    <section className='events-section'>
+                        {pastEvents.map(event => (
+                            <div className='indiv-group-event' onClick={() => history.push(`/events/${event.id}`)}>
+                                <div className='indiv-event-display'>
+                                    <div className='indiv-event-display-left'>
+                                        {checkForPreviewImage(event.EventImages)}
+                                    </div>
+                                    <div className='indiv-event-display-right'>
+                                        <div className='event-time'>{turnDateToProperTime(event.startDate)}</div>
+                                        <div className='event-title'>{event.name}</div>
+                                        <div className='event-location'>{groupObj.city}, {groupObj.state}</div>
+                                    </div>
+                                </div>
+
+                                <div className='indiv-event-description'>{event.description}</div>
+                            </div>
+                        ))}
+                    </section>
+                </div>
+            )
+        }
     }
 
 
@@ -151,13 +251,13 @@ export default function SingleGroup() {
                 </div>
             </div>
             <div className='group-description'>
-                <div>
-                    <h2>Organizer</h2>
-                    <div>{groupObj.Organizer.firstName} {groupObj.Organizer.lastName}</div>
+                <div className='group-description-parts'>
+                    <h2 className='description-header'>Organizer</h2>
+                    <div className='desciption-subber-organizer'>{groupObj.Organizer.firstName} {groupObj.Organizer.lastName}</div>
                 </div>
-                <div>
-                    <h3>What we're about</h3>
-                    <p>{groupObj.about}</p>
+                <div className='group-description-parts'>
+                    <h3 className='description-header'>What we're about</h3>
+                    <p className='desciption-subber'>{groupObj.about}</p>
                 </div>
                 <div>
                     {eventsList}
