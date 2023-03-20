@@ -13,8 +13,14 @@ export default function DeleteEventModal({ eventId }) {
 
 
     const eventObj = useSelector(state => state.events.Events.allEvents)
+    console.log(eventObj)
 
     const event = eventObj.Events.filter(event => event.id === parseInt(eventId))
+    console.log(event)
+
+    if(!event) {
+        return null
+    }
 
 
     const handleNoClick = (e) => {
@@ -25,7 +31,7 @@ export default function DeleteEventModal({ eventId }) {
     const handleYesClick = (e) => {
         e.preventDefault();
         dispatch(deleteEvent(event, eventId)).then(closeModal)
-        history.push(`/groups/${event[0].Group.id}`)
+        history.push(`/groups/${event[0].groupId}`)
     }
 
 

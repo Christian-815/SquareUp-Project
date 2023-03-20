@@ -12,6 +12,7 @@ export default function EventForm() {
     const groupsObj = useSelector(state => state.groups.groups.allGroups.Groups)
     //
     const group = groupsObj.filter(group => group.id === parseInt(groupid))
+    console.log(group)
     //
 
     const today = new Date();
@@ -25,7 +26,7 @@ export default function EventForm() {
 
     const [errors, setErrors] = useState({});
     const [imageError, setImageError] = useState({});
-    const [venueId, setVenueId] = useState(group[0].Venues[0].id);
+    const [venueId, setVenueId] = useState(1);
     const [groupId, setGroupId] = useState(groupid);
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
