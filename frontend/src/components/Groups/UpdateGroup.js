@@ -192,7 +192,7 @@ export default function UpdateGroup({groups}) {
                         <div>
                             <select onChange={(e) => setGroupPrivate(e.target.value)} defaultValue={Boolean(groupPrivate)}>
                                 <option value=''>(select one)</option>
-                                <option value='true'>Private</option>
+                                <option value={Boolean(true)}>Private</option>
                                 <option value={Boolean(false)}>Public</option>
                             </select>
 

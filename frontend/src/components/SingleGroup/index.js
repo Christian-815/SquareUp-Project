@@ -37,6 +37,10 @@ export default function SingleGroup() {
         history.push(`/groups/${groupId}/edit`)
     }
 
+    const handleEventClick = () => {
+        history.push(`/groups/${groupId}/events/new`)
+    }
+
 
     let userLinks;
     if (!sessionUser) {
@@ -48,7 +52,9 @@ export default function SingleGroup() {
     } else if (sessionUser.id === groupObj.organizerId) {
         userLinks = (
             <div>
-                <button>Create Event</button>
+                <button onClick={handleEventClick}>
+                    Create Event
+                </button>
                 <button onClick={handleUpdateClick}>Update</button>
                 <button>
                     <OpenModalButton
@@ -97,8 +103,30 @@ export default function SingleGroup() {
         }
     }
 
+    const today = new Date();
+    today.setMinutes(today.getMinutes() - today.getTimezoneOffset())
+    console.log(today)
 
-
+    let eventsList;
+    if (!groupObj.Events.length) {
+        eventsList = (
+            <div>
+                <h2>No Upcoming Events</h2>
+            </div>
+        )
+    } else {
+        const upcomingEvents = [];
+        const pastEvents = [];
+        console.log(groupObj.Events)
+        groupObj.Events.forEach(event=> {
+            const eventStartDate = new Date(event.startDate)
+            if (eventStartDate.getTime() <= today.getTime()) {
+                pastEvents.push(event)
+            } else {
+                upcomingEvents.push(event)
+            }
+        })
+    }
 
 
     return (
@@ -113,7 +141,7 @@ export default function SingleGroup() {
                         <h1 className='group-name'>{groupObj.name}</h1>
                         <div>{groupObj.city}, {groupObj.state}</div>
                         <div>
-                            (# of events) events  •  {groupStatus(groupObj.private)}
+                            Number of events ({groupObj.numEvents})  •  {groupStatus(groupObj.private)}
                         </div>
                         <div>Organized by {groupObj.Organizer.firstName} {groupObj.Organizer.lastName}</div>
                     </div>
@@ -132,7 +160,7 @@ export default function SingleGroup() {
                     <p>{groupObj.about}</p>
                 </div>
                 <div>
-                    PLACEHOLDER FOR FUTURE AND PAST EVENTS
+                    {eventsList}
                 </div>
             </div>
         </div>

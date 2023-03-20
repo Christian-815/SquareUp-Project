@@ -150,6 +150,16 @@ router.get('/', validateEventsQueries, async (req, res) => {
         }
     };
 
+    for (let event of events) {
+        const eventImages = await EventImage.findAll({
+            where: {
+                eventId: event.id
+            }
+        });
+
+        event.EventImages = eventImages
+    };
+
     return res.status(200).json({
         Events: events
     })

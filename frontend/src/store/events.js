@@ -4,7 +4,7 @@ const LOAD = 'events/LOAD'
 const ONE = 'events/ONE_EVENT'
 const ADD_EVENT = 'events/ADD_EVENT'
 // const UPDATE_EVENT = 'event/UPDATE'
-const DELETE = 'Event/DELETE'
+const DELETE = 'event/DELETE'
 
 
 
@@ -59,7 +59,7 @@ export const getOneEvent = (id) => async dispatch => {
 
 export const createEvent = (newEvent) => async (dispatch) => {
 
-    const response = await csrfFetch(`/api/events`, {
+    const response = await csrfFetch(`/api/groups/${newEvent.groupId}/events`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newEvent)
@@ -103,6 +103,23 @@ export const deleteEvent = (event, eventId) => async (dispatch) => {
         // return event;
     }
 };
+
+export const addNewEventImage = (eventImage, eventId) => async dispatch => {
+    const response = await csrfFetch(`/api/events/${eventId}/images`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(eventImage)
+    });
+
+    if (response.ok) {
+        const response = await csrfFetch(`/api/events/${eventId}`)
+
+        if (response.ok) {
+            const event = await response.json();
+            dispatch(singleEvent(event))
+        }
+    }
+}
 
 
 //INITIAL STATE

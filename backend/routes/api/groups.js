@@ -80,7 +80,7 @@ const validateNewEvent = [
 
 router.get('/', async (req, res) => {
     const groups = await Group.findAll({ raw: true });
-    // console.log(allGroups)
+    console.log(groups)
 
     for (let group of groups) {
         const numMembers = await Membership.count({
@@ -108,6 +108,15 @@ router.get('/', async (req, res) => {
         }
 
     }
+
+    for (let group of groups) {
+        const groupVenues = await Venue.findAll({
+            where: {
+                groupId: group.id
+            }
+        })
+        group.Venues = groupVenues
+    };
 
     return res.json({
         Groups: groups
@@ -179,6 +188,12 @@ router.get('/:groupId', async (req, res) => {
         }
     });
 
+    group.numEvents = await Event.count({
+        where: {
+            groupId: req.params.groupId
+        }
+    });
+
     group.GroupImages = await GroupImage.scope('currentGroup').findAll({
         where: {
             groupId: req.params.groupId
@@ -190,6 +205,12 @@ router.get('/:groupId', async (req, res) => {
     });
 
     group.Venues = await Venue.findAll({
+        where: {
+            groupId: req.params.groupId
+        }
+    });
+
+    group.Events = await Event.findAll({
         where: {
             groupId: req.params.groupId
         }
