@@ -130,7 +130,7 @@ const groupsReducer = (state = initialState, action) => {
             return singleGroupState
         case ADD_GROUP:
             const newGroupState = { ...state };
-            newGroupState.groups.allGroups[action.group.id] = action.group
+            newGroupState.groups.allGroups.Groups.push(action.group)
             return newGroupState
         case UPDATE_GROUP:
             const updatedGroupState = { ...state };

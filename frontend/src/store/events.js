@@ -121,6 +121,10 @@ export const addNewEventImage = (eventImage, eventId) => async dispatch => {
     }
 }
 
+export const addNewEventVenue = () => async dispatch => {
+    
+}
+
 
 //INITIAL STATE
 const initialState = {
@@ -147,7 +151,7 @@ const EventsReducer = (state = initialState, action) => {
             return singleEventState
         case ADD_EVENT:
             const newEventState = { ...state };
-            newEventState.Events.allEvents[action.event.id] = action.event
+            newEventState.Events.allEvents.Events.push(action.event)
             return newEventState
         // case UPDATE_EVENT:
         //     const updatedEventState = { ...state };
