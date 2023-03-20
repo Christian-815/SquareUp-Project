@@ -1,0 +1,34 @@
+.new-event-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: auto;
+    font-family: 'Oswald', sans-serif;
+}
+
+.new-event-header {
+    border-bottom: medium solid lightgray;
+}
+
+.new-event-form {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1em;
+    justify-content: space-around;
+
+}
+
+.new-event-section {
+    border-bottom: medium solid lightgray;
+    padding-bottom: 1em;
+}
+
+.event-popup-error {
+    font-size: 12px;
+    font-family: 'Merriweather', serif;
+    font-weight: bold;
+    color: red;
+    margin: 0;
+    position: relative;
+    top: 0.2em;
+}

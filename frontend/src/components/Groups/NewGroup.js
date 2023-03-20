@@ -32,12 +32,12 @@ export default function GroupForm() {
         let newGroup = await dispatch(createGroup(payload)).catch(
             async (res) => {
                 const data = await res.json();
-                console.log(data)
+
                 if (data && data.error) setErrors(data.error);
             }
         );
 
-        console.log(newGroup)
+
 
         if (newGroup) {
             history.push(`/groups/${newGroup.id}`)
@@ -46,15 +46,15 @@ export default function GroupForm() {
     };
 
     return (
-        <div className="new-group-form">
+        <div>
             <div className="new-group-page">
-                <div>
-                    <h3>BECOME AN ORGANIZER</h3>
+                <div className='new-group-header'>
+                    <h5 className='become-organizer'>BECOME AN ORGANIZER</h5>
                     <h1>We'll walk you through a few steps to build your local gaming community</h1>
                 </div>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} className='new-group-form'>
 
-                    <section>
+                    <section className='new-group-section'>
                         <div>
                             <h2>First, set up your group's location.</h2>
                             <div>
@@ -62,7 +62,7 @@ export default function GroupForm() {
                             </div>
                         </div>
 
-                        <div>
+                        <div className='citystate-input input-box'>
                             <input
                                 type='text'
                                 placeholder="City"
@@ -88,7 +88,7 @@ export default function GroupForm() {
 
                     </section>
 
-                    <section>
+                    <section className='new-group-section'>
                         <div>
                             <h2>What will your group's name be?</h2>
                             <div>
@@ -97,7 +97,7 @@ export default function GroupForm() {
                             </div>
                         </div>
 
-                        <div>
+                        <div className='input-box'>
                             <input
                                 type='text'
                                 placeholder="What is your group name?"
@@ -114,7 +114,7 @@ export default function GroupForm() {
 
                     </section>
 
-                    <section>
+                    <section className='new-group-section'>
                         <div>
                             <h2>Now describe what your group will be about</h2>
                             <div>
@@ -128,12 +128,14 @@ export default function GroupForm() {
                             <li>What will you do at your events?</li>
                         </ol>
 
-                        <div>
+                        <div className='input-box'>
                             <input
                                 type='text'
                                 placeholder="Please write at least 50 characters"
                                 value={about}
                                 onChange={(e) => setAbout(e.target.value)}
+                                className='new-group-about'
+                                size={55}
                             />
                         </div>
 
@@ -145,7 +147,7 @@ export default function GroupForm() {
 
                     </section>
 
-                    <section>
+                    <section className='new-group-section'>
                         <div>
                             <h2>Final steps...</h2>
                         </div>
@@ -181,13 +183,13 @@ export default function GroupForm() {
                         </div>
 
                         <span>Please add in image url for your group below:</span>
-                        <div>
+                        <div className='input-box'>
                             Image Placeholder
                         </div>
                     </section>
 
                     <section>
-                        <button type="submit">Create group</button>
+                        <button type="submit" className='join-squareUp'>Create group</button>
                     </section>
 
                 </form>

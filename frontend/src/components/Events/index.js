@@ -25,7 +25,7 @@ export default function Events() {
     }
 
     const events = eventsObj.Events
-    console.log(events)
+
 
 
     const hasPreview = (previewImage) => {

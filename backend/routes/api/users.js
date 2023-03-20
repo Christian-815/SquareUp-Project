@@ -37,6 +37,16 @@ const validateSignup = [
         .not()
         .isEmail()
         .withMessage('Username cannot be an email.'),
+    check('username')
+        .custom(value => {
+            return User.findOne({
+                where: { username: value }
+            }).then(user => {
+                if (user) {
+                    return Promise.reject('User with that username already exists')
+                }
+            })
+        }),
     check('password')
         .exists({ checkFalsy: true })
         .isLength({ min: 6 })
@@ -65,7 +75,7 @@ router.post(
         });
     },
     async (err, req, res, next) => {
-        console.log('--------------------SECOND MIDDLEWARE FUNCTION----------------')
+        // console.log('--------------------SECOND MIDDLEWARE FUNCTION----------------')
         if (err.errors.email === 'User with that email already exists') {
             // console.log('|||||||||||||||||||||||ERROR SAME EMAIL|||||||||||||||||||||||||||||||||', req.body)
             err.status = 403;
@@ -107,6 +117,19 @@ router.post(
             err.message = "Validation error";
             err.errors.lastName = "Last Name is required"
             return res.status(400).json({
+                message: err.message,
+                statusCode: err.status,
+                error: err.errors
+            })
+        };
+
+        if (err.errors.username === 'User with that username already exists') {
+            // console.log('|||||||||||||||||||||||ERROR SAME EMAIL|||||||||||||||||||||||||||||||||', req.body)
+            err.status = 403;
+            err.message = "Username already exists";
+            delete err.title
+
+            return res.status(403).json({
                 message: err.message,
                 statusCode: err.status,
                 error: err.errors

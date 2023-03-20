@@ -18,14 +18,14 @@ export default function Groups() {
         dispatch(getAllGroups())
     }, [dispatch]);
 
-    const groupsObj = useSelector(state=>state.groups.groups.allGroups);
+    const groupsObj = useSelector(state => state.groups.groups.allGroups);
 
     if (!Object.values(groupsObj).length) {
         return null;
     }
 
     const groups = groupsObj.Groups
-    console.log(groups)
+
 
 
     const groupStatus = (groupPrivateOrPublic) => {

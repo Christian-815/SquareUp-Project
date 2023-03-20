@@ -9,13 +9,13 @@ export default function DeleteEventModal({ eventId }) {
     const { closeModal } = useModal();
     const dispatch = useDispatch();
     const history = useHistory();
-    // console.log(parseInt(eventId))
+    //
 
 
     const eventObj = useSelector(state => state.events.Events.allEvents)
 
     const event = eventObj.Events.filter(event => event.id === parseInt(eventId))
-    console.log('-----------event-----------', event[0].Group.id)
+
 
     const handleNoClick = (e) => {
         e.preventDefault();

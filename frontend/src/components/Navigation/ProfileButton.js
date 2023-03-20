@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch } from 'react-redux';
+import { Link, useHistory } from "react-router-dom";
 import * as sessionActions from '../../store/session';
 
 function ProfileButton({ user }) {
     const dispatch = useDispatch();
+    const history = useHistory();
     const [showMenu, setShowMenu] = useState(false);
     const divRef = useRef();
 
@@ -32,6 +34,7 @@ function ProfileButton({ user }) {
         e.preventDefault();
         dispatch(sessionActions.logout());
         closeMenu();
+        history.push('/')
     };
 
     const divClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
@@ -46,8 +49,14 @@ function ProfileButton({ user }) {
             </button>
             <div className={divClassName} ref={divRef}>
                 <div>{user.username}</div>
-                <div>{user.firstName} {user.lastName}</div>
+                <div>Hello, {user.firstName}</div>
                 <div>{user.email}</div>
+                <div className="active-userGroups">
+                    <Link to='/groups' className="active">View groups</Link>
+                </div>
+                <div className="active-userGroups">
+                    <Link to='/events' className="active">View events</Link>
+                </div>
                 <div>
                     <button onClick={logout}>
                         Log Out

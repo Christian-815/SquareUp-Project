@@ -43,6 +43,7 @@
     width: 40em;
     height: 12em;
     padding-top: 1em;
+    cursor: pointer;
 }
 
 .event-div-top {

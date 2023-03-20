@@ -24,11 +24,11 @@ function App() {
   }, [dispatch]);
 
   const groups = useSelector(state => state.groups.groups.allGroups)
-  // console.log(groups)
-  const events = useSelector(state=> state.events.Events.allEvents)
-  // console.log(events)
+  //
+  const events = useSelector(state => state.events.Events.allEvents)
+  //
   if (!Object.values(groups).length || !Object.values(events).length) {
-    // console.log('-------------group obj bad---------')
+    //
     return null;
   }
 
@@ -50,7 +50,7 @@ function App() {
             <SingleGroup />
           </Route>
           <Route path='/groups/:groupId/edit' exact>
-            <UpdateGroup groups={groups}/>
+            <UpdateGroup groups={groups} />
           </Route>
           <Route path='/groups/:groupid/events/new' exact>
             <EventForm />

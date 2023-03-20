@@ -74,7 +74,7 @@ export const createGroup = (newGroup) => async (dispatch) => {
 
 export const updateGroup = (updatedGroup, groupId) => async (dispatch) => {
 
-    // console.log('==============================', updatedGroup, groupId)
+    //
 
     const response = await csrfFetch(`/api/groups/${groupId}`, {
         method: 'PUT',
@@ -91,7 +91,7 @@ export const updateGroup = (updatedGroup, groupId) => async (dispatch) => {
 
 export const deleteGroup = (group, groupId) => async (dispatch) => {
 
-    // console.log('===================IN THU====================', group, groupId)
+    //
 
     const response = await csrfFetch(`/api/groups/${groupId}`, {
         method: 'DELETE'
@@ -106,10 +106,12 @@ export const deleteGroup = (group, groupId) => async (dispatch) => {
 
 
 //INITIAL STATE
-const initialState = { groups: {
-    allGroups: {},
-    singleGroup: {}
-}}
+const initialState = {
+    groups: {
+        allGroups: {},
+        singleGroup: {}
+    }
+}
 
 
 //REDUCER
@@ -117,33 +119,33 @@ const initialState = { groups: {
 const groupsReducer = (state = initialState, action) => {
     switch (action.type) {
         case LOAD:
-            const allGroupsState = {...state};
+            const allGroupsState = { ...state };
             allGroupsState.groups.allGroups = action.groups
             return allGroupsState
         case ONE:
-            const singleGroupState = {...state};
-            // console.log('===========', singleGroupState)
-            singleGroupState.groups.singleGroup[action.group.id] = {...action.group};
-            // console.log(singleGroupState.groups.singleGroup)
+            const singleGroupState = { ...state };
+            //
+            singleGroupState.groups.singleGroup[action.group.id] = { ...action.group };
+            //
             return singleGroupState
         case ADD_GROUP:
-            const newGroupState = {...state};
+            const newGroupState = { ...state };
             newGroupState.groups.allGroups[action.group.id] = action.group
             return newGroupState
         case UPDATE_GROUP:
-            const updatedGroupState = {...state};
-            // console.log(updatedGroupState.groups.allGroups.Groups)
+            const updatedGroupState = { ...state };
+            //
             updatedGroupState.groups.allGroups.Groups = updatedGroupState.groups.allGroups.Groups.filter(group => group.id !== action.group.id);
-            // console.log(updatedGroupState.groups.allGroups.Groups)
+            //
             updatedGroupState.groups.allGroups.Groups.push(action.group);
-            // console.log(updatedGroupState.groups.allGroups.Groups)
+            //
             return updatedGroupState
         case DELETE:
-            const deletedGroupState = {...state};
-            // console.log('------------------In Reducer before delete-------------------', deletedGroupState.groups.allGroups.Groups)
+            const deletedGroupState = { ...state };
+            //
             // delete deletedGroupState.groups.allGroups[action.group.id]
             deletedGroupState.groups.allGroups.Groups = deletedGroupState.groups.allGroups.Groups.filter(group => group.id !== action.group.id)
-            // console.log('-----------------In Reducer after delete--------------------', deletedGroupState.groups.allGroups.Groups)
+            //
             return deletedGroupState
         default:
             return state;
