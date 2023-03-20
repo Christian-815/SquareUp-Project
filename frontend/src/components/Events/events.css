@@ -15,7 +15,7 @@
     column-gap: 1.5em;
     width: 40em;
     border-bottom: medium solid lightgray;
-    padding-bottom: 0.5em;
+    padding-bottom: 1.5em;
 }
 
 .active-list {
@@ -37,22 +37,20 @@
 .individual-events {
     display: flex;
     flex-flow: column nowrap;
-    justify-content: center;
+    justify-content: space-between;
     row-gap: 1em;
     border-bottom: medium solid lightgray;
     width: 40em;
-    height: 10em;
-    padding-bottom: 0.5em;
+    height: 12em;
     padding-top: 1em;
 }
 
-.event-div {
+.event-div-top {
     display: flex;
     flex-flow: row nowrap;
     justify-content: center;
     column-gap: 1em;
-    width: 40em;
-    height: 10em;
+    height: 55%;
 }
 
 .event-image {
@@ -62,9 +60,17 @@
 }
 
 .event-div-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     width: 66%;
 }
 
 .event-div-left {
     width: 33%;
+}
+
+.event-div-bottom {
+    height: 45%;
+    overflow: auto;
 }

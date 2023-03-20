@@ -44,6 +44,7 @@
     height: 10em;
     padding-bottom: 0.5em;
     padding-top: 1em;
+    cursor: pointer;
 }
 
 .group-image {
@@ -54,6 +55,22 @@
 
 .group-div-right {
     width: 66%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.group-title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.group-location {
+    font-size: smaller;
+}
+
+.group-about {
+    overflow: hidden;
 }
 
 .group-div-left {

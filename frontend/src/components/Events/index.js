@@ -35,6 +35,12 @@ export default function Events() {
             return previewImage
         }
     }
+    const turnDateToProperTime = (date) => {
+        const properDate = date.substring(0, 16);
+        const eventDate = properDate.replace(' ', ' • ')
+
+        return eventDate
+    }
 
 
     return (
@@ -51,19 +57,19 @@ export default function Events() {
             <div>
                 {events.map((event) => (
                     <div key={event.id} className='individual-events' onClick={() => routeChange(event.id)}>
-                        <div className='event-div'>
+                        <div className='event-div-top'>
                             <div className='event-div-left'>
                                 <img src={hasPreview(event.previewImage)} alt='event' className='event-image'></img>
                             </div>
                             <div className='event-div-right'>
-                                <h3>{event.startDate}</h3>
-                                <h3>
+                                <div className='event-time'>{turnDateToProperTime(event.startDate)}</div>
+                                <div className='event-title'>
                                     {event.name}
-                                </h3>
-                                <div>{event.Venue.city}, {event.Venue.state}</div>
+                                </div>
+                                <div className='event-location'>{event.Venue.city}, {event.Venue.state}</div>
                             </div>
                         </div>
-                        <div>
+                        <div className='event-div-bottom'>
                             {event.description}
                         </div>
                     </div>

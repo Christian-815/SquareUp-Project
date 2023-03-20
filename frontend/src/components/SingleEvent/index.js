@@ -110,6 +110,25 @@ export default function SingleEvent() {
         history.push(`/groups/${groupId}`)
     }
 
+    const turnDateToProperTime = (date) => {
+        const properDate = date.substring(0, 16);
+        const eventDate = properDate.replace(' ', ' • ')
+
+        return eventDate
+    }
+
+    let price;
+
+    if (!eventObj.price) {
+        price = (
+            <div className='event-lighterShade'>FREE</div>
+        )
+    } else {
+        price = (
+            <div className='event-lighterShade'>{eventObj.price}</div>
+        )
+    }
+
 
 
     return (
@@ -146,8 +165,8 @@ export default function SingleEvent() {
                                         <div>END</div>
                                     </div>
                                     <div className='event-time'>
-                                        <div>{eventObj.startDate}</div>
-                                        <div>{eventObj.endDate}</div>
+                                        <div>{turnDateToProperTime(eventObj.startDate)}</div>
+                                        <div>{turnDateToProperTime(eventObj.endDate)}</div>
                                     </div>
                                 </div>
 
@@ -156,7 +175,7 @@ export default function SingleEvent() {
                                         <i class="fa-sharp fa-solid fa-coins"></i>
                                     </div>
                                     <div>
-                                        <div className='event-lighterShade'>{eventObj.price}</div>
+                                        <div className='event-lighterShade'>{price}</div>
                                     </div>
                                 </div>
 

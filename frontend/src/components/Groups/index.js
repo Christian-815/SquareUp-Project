@@ -25,7 +25,7 @@ export default function Groups() {
     }
 
     const groups = groupsObj.Groups
-    // console.log(groups)
+    console.log(groups)
 
 
     const groupStatus = (groupPrivateOrPublic) => {
@@ -63,13 +63,13 @@ export default function Groups() {
                             <img src={hasPreview(group.previewImage)} alt='group' className='group-image'></img>
                         </div>
                         <div className='group-div-right'>
-                            <h3>
+                            <div className='group-title'>
                                 {group.name}
-                            </h3>
-                            <div>{group.city}, {group.state}</div>
-                            <div>{group.about}</div>
+                            </div>
+                            <div className='group-location'>{group.city}, {group.state}</div>
+                            <div className='group-about'>{group.about}</div>
                             <div>
-                                (# of events) events  •  {groupStatus(group.private)}
+                                ({group.numEvents}) events  •  {groupStatus(group.private)}
                             </div>
                         </div>
                     </div>
