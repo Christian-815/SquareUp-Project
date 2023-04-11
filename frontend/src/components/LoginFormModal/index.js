@@ -62,7 +62,7 @@ function LoginFormModal() {
                             value={credential}
                             onChange={(e) => setCredential(e.target.value)}
                             required
-                            className="login-input-box"
+                            className="input-box"
                         />
                     </label>
                     <label className="userpassword-input-title">
@@ -72,7 +72,7 @@ function LoginFormModal() {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
-                            className="login-input-box"
+                            className="input-box"
                         />
                     </label>
                     <button className="login-submit-button" type="submit" disabled={disabled} >Log In</button>

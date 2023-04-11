@@ -39,7 +39,7 @@
     top: 1em;
 } */
 
-input[type="text"], select, input[type='datetime-local'] {
+input[type="text"], select, input[type='datetime-local'], input[type="password"] {
     background-color: #d1d1d1;
 }
 
