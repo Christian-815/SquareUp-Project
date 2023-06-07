@@ -30,7 +30,7 @@ SquareUp Live Link --> https://meetup-clone-yx1a.onrender.com/
 ![squareUp-inidvGrouppage](https://github.com/Christian-815/SquareUp-Project/assets/108007042/5ecadb26-4380-4b12-b318-59aad19608cc)
 
 ### Events Page
-![squareUp-inidvEventpage](https://github.com/Christian-815/SquareUp-Project/assets/108007042/4d8ae9aa-18dd-46f4-8a9c-531f04ae268c)
+![squareUp-eventspage](https://github.com/Christian-815/SquareUp-Project/assets/108007042/9ca40775-adea-45e8-a766-2f2ce879249d)
 
 ### Individual Events Page
 ![squareUp-inidvEventpage](https://github.com/Christian-815/SquareUp-Project/assets/108007042/98e4a383-e110-4f09-ba1f-b80112b13ace)
