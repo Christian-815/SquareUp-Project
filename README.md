@@ -18,6 +18,12 @@ SquareUp Live Link --> https://meetup-clone-yx1a.onrender.com/
 ![SQLite](https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&logo=sqlite&logoColor=white)
 ![Sequelize](https://img.shields.io/badge/Sequelize-52B0E7?style=for-the-badge&logo=Sequelize&logoColor=white)
 
+<br />
+
+**For additional information please check out the WIKI page on this repo:**
+
+[WIKI](https://github.com/Christian-815/SquareUp-Project/wiki)
+
 ## Project Showcase
 
 ### Homepage
