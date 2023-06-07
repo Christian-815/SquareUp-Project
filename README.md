@@ -2,12 +2,7 @@
 
 ## Intro
 
-First fullstack project to make a copy of the website Meetup. I decided to change the theme of the website
-to a website designed for fighting game fans. I wanted to give those fans a platform that was focused solely on
-creating groups and events for competitive or casual play. From my experience in the fighting game community,
-there currently isn't a platform focused solely on fighting games, which are games that thrive on competitiveness
-and having groups of people to practice with. That led me to name my clone SquareUp which is a term used to
-insinuate that a person wants to fight.
+SquareUp is a web application inspired by the popular platform Meetup, with a unique twist focused on scheduling fighting game competitions, events, and hangouts. This project aims to bring together passionate gamers and fighting game enthusiasts, providing them with a dedicated space to organize and participate in thrilling gaming experiences.
 
 SquareUp Live Link --> https://meetup-clone-yx1a.onrender.com/
 
@@ -24,7 +19,28 @@ SquareUp Live Link --> https://meetup-clone-yx1a.onrender.com/
 ![Sequelize](https://img.shields.io/badge/Sequelize-52B0E7?style=for-the-badge&logo=Sequelize&logoColor=white)
 
 ## Project Showcase
+
+### Homepage
 ![SquareUp Home page](https://user-images.githubusercontent.com/108007042/226363221-29d17071-98f9-4857-8360-3d50cb1e83dc.jpg)
+
+### Groups Page
+![squareUp-grouppage](https://github.com/Christian-815/SquareUp-Project/assets/108007042/bfc0826a-8ceb-43eb-8562-a209122df48f)
+
+### Individual Groups Page
+![squareUp-inidvGrouppage](https://github.com/Christian-815/SquareUp-Project/assets/108007042/5ecadb26-4380-4b12-b318-59aad19608cc)
+
+### Events Page
+![squareUp-inidvEventpage](https://github.com/Christian-815/SquareUp-Project/assets/108007042/4d8ae9aa-18dd-46f4-8a9c-531f04ae268c)
+
+### Individual Events Page
+![squareUp-inidvEventpage](https://github.com/Christian-815/SquareUp-Project/assets/108007042/98e4a383-e110-4f09-ba1f-b80112b13ace)
+
+### Sign Up
+![squareUp-signUp](https://github.com/Christian-815/SquareUp-Project/assets/108007042/62d31277-538a-4ea4-be15-bffef7c85ba5)
+
+### Log In
+![squareUp-login](https://github.com/Christian-815/SquareUp-Project/assets/108007042/835b82aa-dd32-40b5-88bb-d3c404f48eb5)
+
 
 ## Launch Locally
 To launch the application locally:
