@@ -27,8 +27,11 @@ SquareUp Live Link --> https://meetup-clone-yx1a.onrender.com/
 ![SquareUp Home page](https://user-images.githubusercontent.com/108007042/226363221-29d17071-98f9-4857-8360-3d50cb1e83dc.jpg)
 
 ## Launch Locally
-To launch this project locally:
-1. Copy the repo Link.
-2. Clone the repo on your system wherever you want to store it using that link.
-3. npm install dependencies
-4. npm start the backend server and then the frontend server
+To launch the application locally:
+* Clone the repository
+* Open the root folder and type "npm install" to install root dependencies
+* Open the backend folder and type "npm i && npx dotenv sequelize-cli db:migrate && npx dotenv sequelize-cli db:seed:all && npm start" to install backend dependencies
+* Open the frontend folder and type "npm i" to install frontend dependencies
+* Inside the backend folder, type "npm start" to start the express server on localhost:8000
+* Inside the frontend folder, type "npm start" to start the react frontend server on localhost:3000
+* The application should now be running!
