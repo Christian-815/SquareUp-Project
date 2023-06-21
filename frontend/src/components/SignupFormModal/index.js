@@ -18,11 +18,11 @@ function SignupFormModal() {
     const [disabled, setDisabled] = useState(true)
     const { closeModal } = useModal();
 
-    useEffect(() => {
-        if (username.length >= 4 && password.length >= 6 && password === confirmPassword && firstName.length && lastName.length && email.length) {
-            setDisabled(false)
-        }
-    }, [email, username, firstName, lastName, password, confirmPassword])
+    // useEffect(() => {
+    //     if (username.length >= 4 && password.length >= 6 && password === confirmPassword && firstName.length && lastName.length && email.length) {
+    //         setDisabled(false)
+    //     }
+    // }, [email, username, firstName, lastName, password, confirmPassword])
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -126,7 +126,7 @@ function SignupFormModal() {
                             className='input-box'
                         />
                     </label>
-                    <button type="submit" className="popup-submit-button" disabled={disabled}>Sign Up</button>
+                    <button type="submit" className="popup-submit-button">Sign Up</button>
                 </form>
             </div>
         </>

@@ -10,7 +10,7 @@ function LoginFormModal() {
     const [password, setPassword] = useState("");
     const [errors, setErrors] = useState({});
     const { closeModal } = useModal();
-    const [disabled, setDisabled] = useState(true)
+    // const [disabled, setDisabled] = useState(true)
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -29,13 +29,13 @@ function LoginFormModal() {
             );
     };
 
-    useEffect(() => {
-        if (credential.length >= 4 && password.length >= 6) {
-            setDisabled(false)
-        } else {
-            setDisabled(true)
-        }
-    }, [credential, password])
+    // useEffect(() => {
+    //     if (credential.length >= 4 && password.length >= 6) {
+    //         setDisabled(false)
+    //     } else {
+    //         setDisabled(true)
+    //     }
+    // }, [credential, password])
 
     const handleClick = () => {
         setCredential('Demo-lition');
@@ -75,7 +75,7 @@ function LoginFormModal() {
                             className="input-box"
                         />
                     </label>
-                    <button className="login-submit-button" type="submit" disabled={disabled} >Log In</button>
+                    <button className="login-submit-button" type="submit" >Log In</button>
                     <div className="button-seperator">OR</div>
                     <button className="login-submit-button" type='submit' onClick={handleClick}>Demo Login</button>
                 </form>
