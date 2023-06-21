@@ -34,16 +34,7 @@
     column-gap: 0.5em;
 }
 
-/* .input-box {
-    position: relative;
-    top: 1em;
-} */
-
-input[type="text"], select, input[type='datetime-local'] {
+input[type="text"], select, input[type='datetime-local'], input[type="password"] {
     background-color: #d1d1d1;
+    border-radius: 9px;
 }
-
-/* .new-group-about {
-    padding-bottom: 5em;
-    line-height: 150%;
-} */

@@ -12,7 +12,6 @@ export default function EventForm() {
     const groupsObj = useSelector(state => state.groups.groups.allGroups.Groups)
     //
     const group = groupsObj.filter(group => group.id === parseInt(groupid))
-    console.log(group)
     //
 
     const today = new Date();
@@ -234,6 +233,14 @@ export default function EventForm() {
                                 onChange={(e) => setEventImage(e.target.value)}
                                 onBlur={() => checkEventImage(eventImage)}
                             />
+                            {/* <input
+                                type='file'
+                                // placeholder="Image URL"
+                                // value={eventImage}
+                                accept="image/png, image/jpeg, image/jpg"
+                                onChange={(e) => setEventImage(e.target.value)}
+                            // onBlur={() => checkEventImage(eventImage)}
+                            /> */}
                         </div>
 
                         {/* {checkImageError(() => checkEventImage(eventImage))} */}
