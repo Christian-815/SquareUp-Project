@@ -4,6 +4,10 @@ const { Event, Membership, Group, User, Venue, Attendance, EventImage, GroupImag
 const { Op } = require('sequelize');
 const { check, query } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
+const {
+    singleMulterUpload,
+    singlePublicFileUpload
+} = require("../../awsS3");
 
 const validateNewEvent = [
     check('venueId')
@@ -256,7 +260,7 @@ router.get('/:eventId', async (req, res) => {
     return res.status(200).json(event)
 });
 
-router.post('/:eventId/images', async (req, res) => {
+router.post('/:eventId/images', singleMulterUpload("image"), async (req, res) => {
     const user = req.user.dataValues;
     if (!user) {
         return res.status(401).json({
@@ -292,11 +296,12 @@ router.post('/:eventId/images', async (req, res) => {
     });
 
     if (userAttendee) {
-        const { url, preview } = req.body;
+        const { preview } = req.body;
+        const eventImageUrl = await singlePublicFileUpload(req.file);
 
         const newEventImage = await EventImage.create({
             eventId: event.id,
-            url,
+            url: eventImageUrl,
             preview
         });
 
@@ -327,11 +332,12 @@ router.post('/:eventId/images', async (req, res) => {
             })
         };
 
-        const { url, preview } = req.body;
+        const { preview, url } = req.body;
+        const eventImageUrl = await singlePublicFileUpload(req.file);
 
         const newEventImage = await EventImage.create({
             eventId: event.id,
-            url,
+            url: eventImageUrl,
             preview
         });
 

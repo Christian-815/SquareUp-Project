@@ -34,7 +34,7 @@ export default function EventForm() {
     const [price, setPrice] = useState();
     const [startDate, setStartDate] = useState(todayDate);
     const [endDate, setEndDate] = useState(pastDate);
-    const [eventImage, setEventImage] = useState();
+    const [eventImage, setEventImage] = useState(null);
 
 
     const handleSubmit = async (e) => {
@@ -60,11 +60,13 @@ export default function EventForm() {
                 if (data && data.errors) setErrors(data.errors);
             }
         );
+        console.log(eventImage)
+        console.log(newEvent)
 
 
 
         if (!eventImage) {
-            setEventImage('image.png')
+            setEventImage('https://t4.ftcdn.net/jpg/03/61/03/95/360_F_361039511_WEAbESzXvHFnoILX9GFLerq0sFqYbHMy.jpg')
         }
 
 
@@ -92,18 +94,23 @@ export default function EventForm() {
         timeErrors.endDate = "End date is less than start date"
     };
 
-    const checkEventImage = () => {
-        const imageTypes = ['png', 'jpg', 'jpeg']
-        const imageUrlFormatCorrect = eventImage.split('.')
+    // const checkEventImage = () => {
+    //     const imageTypes = ['png', 'jpg', 'jpeg']
+    //     const imageUrlFormatCorrect = eventImage.split('.')
 
-        if (!imageTypes.includes(imageUrlFormatCorrect[imageUrlFormatCorrect.length - 1])) {
-            setImageError({
-                imgError: 'Image URL must end in .png, .jpg, or .jpeg'
-            })
-        } else {
-            setImageError({})
-        }
-    }
+    //     if (!imageTypes.includes(imageUrlFormatCorrect[imageUrlFormatCorrect.length - 1])) {
+    //         setImageError({
+    //             imgError: 'Image URL must end in .png, .jpg, or .jpeg'
+    //         })
+    //     } else {
+    //         setImageError({})
+    //     }
+    // }
+
+    const updateFile = (e) => {
+        const file = e.target.files[0];
+        if (file) setEventImage(file);
+    };
 
     return (
         <div className="new-event-page">
@@ -226,21 +233,21 @@ export default function EventForm() {
                         </div>
 
                         <div>
-                            <input
+                            {/* <input
                                 type='text'
                                 placeholder="Image URL"
                                 value={eventImage}
                                 onChange={(e) => setEventImage(e.target.value)}
                                 onBlur={() => checkEventImage(eventImage)}
-                            />
-                            {/* <input
+                            /> */}
+                            <input
                                 type='file'
                                 // placeholder="Image URL"
                                 // value={eventImage}
                                 accept="image/png, image/jpeg, image/jpg"
-                                onChange={(e) => setEventImage(e.target.value)}
+                                onChange={updateFile}
                             // onBlur={() => checkEventImage(eventImage)}
-                            /> */}
+                            />
                         </div>
 
                         {/* {checkImageError(() => checkEventImage(eventImage))} */}

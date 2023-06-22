@@ -105,10 +105,15 @@ export const deleteEvent = (event, eventId) => async (dispatch) => {
 };
 
 export const addNewEventImage = (eventImage, eventId) => async dispatch => {
+    const { url, preview } = eventImage
+    const formData = new FormData();
+    formData.append('preview', preview)
+    if (url) formData.append("url", url);
+
     const response = await csrfFetch(`/api/events/${eventId}/images`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(eventImage)
+        body: formData
     });
 
     if (response.ok) {
@@ -122,7 +127,7 @@ export const addNewEventImage = (eventImage, eventId) => async dispatch => {
 }
 
 export const addNewEventVenue = () => async dispatch => {
-    
+
 }
 
 
