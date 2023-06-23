@@ -52,34 +52,25 @@ export default function EventForm() {
             startDate,
             endDate
         }
-
-        let newEvent = await dispatch(createEvent(payload)).catch(
-            async (res) => {
-                const data = await res.json();
-
-                if (data && data.errors) setErrors(data.errors);
-            }
-        );
-        console.log(eventImage)
-        console.log(newEvent)
-
-
-
         if (!eventImage) {
             setEventImage('https://t4.ftcdn.net/jpg/03/61/03/95/360_F_361039511_WEAbESzXvHFnoILX9GFLerq0sFqYbHMy.jpg')
         }
 
 
-        if (newEvent) {
-            const imagePayload = {
-                url: eventImage,
-                preview: true
-            }
-
-            dispatch(addNewEventImage(imagePayload, newEvent.id))
-
-            history.push(`/events/${newEvent.id}`)
+        const imagePayload = {
+            url: eventImage,
+            preview: true
         }
+
+        let newEvent = await dispatch(createEvent(payload, imagePayload)).catch(
+            async (res) => {
+                const data = await res.json();
+
+                if (data && data.errors) setErrors(data.errors);
+            }
+            );
+        history.push(`/events/${newEvent.id}`)
+
     };
 
     const timeErrors = {};
@@ -190,7 +181,7 @@ export default function EventForm() {
                         <div>
                             <input
                                 type='datetime-local'
-                                value={startDate}
+                                // value={startDate}
                                 onChange={(e) => setStartDate(e.target.value)}
                             />
                         </div>
@@ -209,7 +200,7 @@ export default function EventForm() {
                         <div>
                             <input
                                 type='datetime-local'
-                                value={endDate}
+                                // value={endDate}
                                 onChange={(e) => setEndDate(e.target.value)}
                             />
                         </div>

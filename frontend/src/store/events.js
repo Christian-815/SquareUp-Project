@@ -57,7 +57,7 @@ export const getOneEvent = (id) => async dispatch => {
     }
 };
 
-export const createEvent = (newEvent) => async (dispatch) => {
+export const createEvent = (newEvent, eventImage) => async (dispatch) => {
 
     const response = await csrfFetch(`/api/groups/${newEvent.groupId}/events`, {
         method: 'POST',
@@ -67,8 +67,22 @@ export const createEvent = (newEvent) => async (dispatch) => {
 
     if (response.ok) {
         const event = await response.json();
-        dispatch(addOneEvent(event));
-        return event;
+        const { url, preview } = eventImage
+        const formData = new FormData();
+        formData.append('preview', preview)
+        if (url) formData.append("url", url);
+        console.log(event.id)
+
+        const imageResponse = await csrfFetch(`/api/events/${event.id}/images`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'multipart/form-data' },
+            body: formData
+        });
+
+        if (imageResponse.ok) {
+            dispatch(addOneEvent(event));
+            return event;
+        }
     }
 };
 

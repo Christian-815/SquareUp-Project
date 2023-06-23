@@ -6,7 +6,8 @@ const { check, query } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const {
     singleMulterUpload,
-    singlePublicFileUpload
+    singlePublicFileUpload,
+    deleteFile
 } = require("../../awsS3");
 
 const validateNewEvent = [
@@ -260,7 +261,8 @@ router.get('/:eventId', async (req, res) => {
     return res.status(200).json(event)
 });
 
-router.post('/:eventId/images', singleMulterUpload("image"), async (req, res) => {
+router.post('/:eventId/images', singleMulterUpload("url"), async (req, res) => {
+    console.log('-----MADE IT INSIDE ROUTE-------')
     const user = req.user.dataValues;
     if (!user) {
         return res.status(401).json({
@@ -298,6 +300,8 @@ router.post('/:eventId/images', singleMulterUpload("image"), async (req, res) =>
     if (userAttendee) {
         const { preview } = req.body;
         const eventImageUrl = await singlePublicFileUpload(req.file);
+        console.log('------------', preview, eventImageUrl)
+
 
         const newEventImage = await EventImage.create({
             eventId: event.id,
@@ -332,8 +336,9 @@ router.post('/:eventId/images', singleMulterUpload("image"), async (req, res) =>
             })
         };
 
-        const { preview, url } = req.body;
+        const { preview } = req.body;
         const eventImageUrl = await singlePublicFileUpload(req.file);
+        console.log('------------', preview, eventImageUrl)
 
         const newEventImage = await EventImage.create({
             eventId: event.id,
