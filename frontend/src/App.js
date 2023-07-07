@@ -13,6 +13,7 @@ import UpdateGroup from "./components/Groups/UpdateGroup";
 import Events from "./components/Events";
 import SingleEvent from "./components/SingleEvent";
 import EventForm from "./components/NewEvent";
+import UpdateEvent from "./components/Events/UpdateEvent";
 
 function App() {
   const dispatch = useDispatch();
@@ -61,6 +62,9 @@ function App() {
           </Route>
           <Route path='/events/:eventId' exact>
             <SingleEvent />
+          </Route>
+          <Route path='/events/:eventId/edit' exact>
+            <UpdateEvent events={events} />
           </Route>
         </Switch>
       )}

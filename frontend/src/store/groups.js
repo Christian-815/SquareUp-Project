@@ -57,7 +57,7 @@ export const getOneGroup = (id) => async dispatch => {
     }
 };
 
-export const createGroup = (newGroup) => async (dispatch) => {
+export const createGroup = (newGroup, groupImage) => async (dispatch) => {
 
     const response = await csrfFetch(`/api/groups`, {
         method: 'POST',
@@ -67,8 +67,23 @@ export const createGroup = (newGroup) => async (dispatch) => {
 
     if (response.ok) {
         const group = await response.json();
-        dispatch(addOneGroup(group));
-        return group;
+
+        const { url, preview } = groupImage;
+        const formData = new FormData();
+        formData.append('preview', preview)
+        if (url) formData.append("url", url);
+
+        const imageResponse = await csrfFetch(`/api/groups/${group.id}/images`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'multipart/form-data' },
+            body: formData
+        });
+
+        if (imageResponse.ok) {
+            dispatch(addOneGroup(group));
+            dispatch(getAllGroups())
+            return group;
+        }
     }
 };
 
@@ -100,6 +115,7 @@ export const deleteGroup = (group, groupId) => async (dispatch) => {
     if (response.ok) {
         // const group = await response.json();
         dispatch(deleteOneGroup(group));
+        dispatch(getAllGroups())
         // return group;
     }
 };

@@ -32,3 +32,9 @@
     position: relative;
     top: 0.2em;
 }
+
+
+.new-event-description {
+    width: 100%;
+    resize: none;
+}
