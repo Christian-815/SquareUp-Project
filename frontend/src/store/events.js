@@ -3,7 +3,7 @@ import { csrfFetch } from './csrf';
 const LOAD = 'events/LOAD'
 const ONE = 'events/ONE_EVENT'
 const ADD_EVENT = 'events/ADD_EVENT'
-// const UPDATE_EVENT = 'event/UPDATE'
+const UPDATE_EVENT = 'event/UPDATE'
 const DELETE = 'event/DELETE'
 
 
@@ -24,10 +24,10 @@ export const addOneEvent = newEvent => ({
     event: newEvent
 });
 
-// export const updateOneEvent = event => ({
-//     type: UPDATE_EVENT,
-//     event: event
-// })
+export const updateOneEvent = event => ({
+    type: UPDATE_EVENT,
+    event: event
+})
 
 export const deleteOneEvent = event => ({
     type: DELETE,
@@ -57,7 +57,7 @@ export const getOneEvent = (id) => async dispatch => {
     }
 };
 
-export const createEvent = (newEvent) => async (dispatch) => {
+export const createEvent = (newEvent, eventImage) => async (dispatch) => {
 
     const response = await csrfFetch(`/api/groups/${newEvent.groupId}/events`, {
         method: 'POST',
@@ -67,27 +67,44 @@ export const createEvent = (newEvent) => async (dispatch) => {
 
     if (response.ok) {
         const event = await response.json();
-        dispatch(addOneEvent(event));
-        return event;
+        // console.log(event)
+        const { url, preview } = eventImage
+        const formData = new FormData();
+        formData.append('preview', preview)
+        if (url) formData.append("url", url);
+        // console.log(event.id)
+
+        const imageResponse = await csrfFetch(`/api/events/${event.id}/images`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'multipart/form-data' },
+            body: formData
+        });
+
+        if (imageResponse.ok) {
+            dispatch(addOneEvent(event));
+            dispatch(getAllEvents())
+            return event;
+        }
     }
 };
 
-// export const updateEvent = (updatedEvent, EventId) => async (dispatch) => {
+export const updateEvent = (updatedEvent, eventId) => async (dispatch) => {
 
-//     //
+    //
 
-//     const response = await csrfFetch(`/api/Events/${EventId}`, {
-//         method: 'PUT',
-//         headers: { 'Content-Type': 'application/json' },
-//         body: JSON.stringify(updatedEvent)
-//     });
+    const response = await csrfFetch(`/api/events/${eventId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedEvent)
+    });
 
-//     if (response.ok) {
-//         const Event = await response.json();
-//         dispatch(updateOneEvent(Event));
-//         return Event;
-//     }
-// };
+    if (response.ok) {
+        const event = await response.json();
+        dispatch(updateOneEvent(event));
+        dispatch(getAllEvents())
+        return event;
+    }
+};
 
 export const deleteEvent = (event, eventId) => async (dispatch) => {
 
@@ -105,10 +122,15 @@ export const deleteEvent = (event, eventId) => async (dispatch) => {
 };
 
 export const addNewEventImage = (eventImage, eventId) => async dispatch => {
+    const { url, preview } = eventImage
+    const formData = new FormData();
+    formData.append('preview', preview)
+    if (url) formData.append("url", url);
+
     const response = await csrfFetch(`/api/events/${eventId}/images`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(eventImage)
+        body: formData
     });
 
     if (response.ok) {
@@ -122,7 +144,7 @@ export const addNewEventImage = (eventImage, eventId) => async dispatch => {
 }
 
 export const addNewEventVenue = () => async dispatch => {
-    
+
 }
 
 
@@ -153,14 +175,14 @@ const EventsReducer = (state = initialState, action) => {
             const newEventState = { ...state };
             newEventState.Events.allEvents.Events.push(action.event)
             return newEventState
-        // case UPDATE_EVENT:
-        //     const updatedEventState = { ...state };
-        //     //
-        //     updatedEventState.Events.allEvents.Events = updatedEventState.Events.allEvents.Events.filter(Event => Event.id !== action.event.id);
-        //     //
-        //     updatedEventState.Events.allEvents.Events.push(action.event);
-        //     //
-        //     return updatedEventState
+        case UPDATE_EVENT:
+            const updatedEventState = { ...state };
+            //
+            updatedEventState.Events.allEvents.Events = updatedEventState.Events.allEvents.Events.filter(Event => Event.id !== action.event.id);
+            //
+            updatedEventState.Events.allEvents.Events.push(action.event);
+            //
+            return updatedEventState
         case DELETE:
             const deletedEventState = { ...state };
             //

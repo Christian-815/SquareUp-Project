@@ -4,6 +4,11 @@ const { Event, Membership, Group, User, Venue, Attendance, EventImage, GroupImag
 const { Op } = require('sequelize');
 const { check, query } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
+const {
+    singleMulterUpload,
+    singlePublicFileUpload,
+    deleteFile
+} = require("../../awsS3");
 
 const validateNewEvent = [
     check('venueId')
@@ -91,7 +96,7 @@ router.get('/', validateEventsQueries, async (req, res) => {
 
     const events = await Event.findAll({
         attributes: {
-            exclude: ['capacity', 'price', 'createdAt', 'updatedAt']
+            exclude: ['capacity', 'createdAt', 'updatedAt']
         },
         order: [['startDate', 'DESC']],
         where,
@@ -256,7 +261,8 @@ router.get('/:eventId', async (req, res) => {
     return res.status(200).json(event)
 });
 
-router.post('/:eventId/images', async (req, res) => {
+router.post('/:eventId/images', singleMulterUpload("url"), async (req, res) => {
+    // console.log('-----MADE IT INSIDE ROUTE-------')
     const user = req.user.dataValues;
     if (!user) {
         return res.status(401).json({
@@ -292,11 +298,14 @@ router.post('/:eventId/images', async (req, res) => {
     });
 
     if (userAttendee) {
-        const { url, preview } = req.body;
+        const { preview } = req.body;
+        const eventImageUrl = await singlePublicFileUpload(req.file);
+        // console.log('------------', preview, eventImageUrl)
+
 
         const newEventImage = await EventImage.create({
             eventId: event.id,
-            url,
+            url: eventImageUrl,
             preview
         });
 
@@ -327,11 +336,13 @@ router.post('/:eventId/images', async (req, res) => {
             })
         };
 
-        const { url, preview } = req.body;
+        const { preview } = req.body;
+        const eventImageUrl = await singlePublicFileUpload(req.file);
+        // console.log('------------', preview, eventImageUrl)
 
         const newEventImage = await EventImage.create({
             eventId: event.id,
-            url,
+            url: eventImageUrl,
             preview
         });
 
@@ -509,6 +520,23 @@ router.delete('/:eventId', async (req, res) => {
             statusCode: 403
         })
     };
+
+    const eventImage = await EventImage.findOne({
+        where: {
+            eventId: event.id
+        }
+    })
+
+    const imageToDelete = eventImage.dataValues.url
+    // console.log('lllllllllllllllllllllllllllllllllll', eventImage.dataValues)
+
+    await deleteFile(imageToDelete)
+        .then(() => {
+            console.log('File deleted successfully.');
+        })
+        .catch((error) => {
+            console.error('Error deleting file:', error);
+        });
 
     await event.destroy();
 

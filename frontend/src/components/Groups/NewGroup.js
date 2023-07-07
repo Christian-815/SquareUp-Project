@@ -14,6 +14,9 @@ export default function GroupForm() {
     const [state, setState] = useState('')
     const [type, setType] = useState('')
     const [groupPrivate, setGroupPrivate] = useState()
+    const [groupImage, setGroupImage] = useState(null)
+    const [imageError, setImageError] = useState({});
+
 
 
     const handleSubmit = async (e) => {
@@ -29,7 +32,18 @@ export default function GroupForm() {
             groupPrivate
         }
 
-        let newGroup = await dispatch(createGroup(payload)).catch(
+        if (!groupImage) {
+            return setImageError({ imgError: 'Image must be uploaded.' })
+        } else {
+            setImageError({})
+        }
+
+        const imagePayload = {
+            url: groupImage,
+            preview: true
+        }
+
+        let newGroup = await dispatch(createGroup(payload, imagePayload)).catch(
             async (res) => {
                 const data = await res.json();
 
@@ -43,6 +57,11 @@ export default function GroupForm() {
             history.push(`/groups/${newGroup.id}`)
         }
 
+    };
+
+    const updateFile = (e) => {
+        const file = e.target.files[0];
+        if (file) setGroupImage(file);
     };
 
     return (
@@ -129,13 +148,13 @@ export default function GroupForm() {
                         </ol>
 
                         <div className='input-box'>
-                            <input
-                                type='text'
+                            <textarea
+                                type='textbox'
                                 placeholder="Please write at least 50 characters"
+                                rows={7}
                                 value={about}
                                 onChange={(e) => setAbout(e.target.value)}
                                 className='new-group-about'
-                                size={55}
                             />
                         </div>
 
@@ -182,10 +201,20 @@ export default function GroupForm() {
                             </ul>
                         </div>
 
-                        <span>Please add in image url for your group below:</span>
+                        <span>Please add a image for your group below:</span>
                         <div className='input-box'>
-                            Image Placeholder
+                            <input
+                                type='file'
+                                accept="image/png, image/jpeg, image/jpg"
+                                onChange={updateFile}
+                            />
                         </div>
+
+                        <ul className='popup-error'>
+                            {imageError.imgError && (
+                                <li key={imageError.imgError}>{imageError.imgError}</li>
+                            )}
+                        </ul>
                     </section>
 
                     <section>

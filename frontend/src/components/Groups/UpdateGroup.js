@@ -155,11 +155,13 @@ export default function UpdateGroup({ groups }) {
                         </ol>
 
                         <div>
-                            <input
-                                type='text'
+                            <textarea
+                                type='textbox'
                                 placeholder="Please write at least 50 characters"
+                                rows={7}
                                 value={about}
                                 onChange={(e) => setAbout(e.target.value)}
+                                className='new-group-about'
                             />
                         </div>
 
@@ -204,11 +206,6 @@ export default function UpdateGroup({ groups }) {
                                     <li key={errors.groupPrivate}>Visibility Type is required</li>
                                 )}
                             </ul>
-                        </div>
-
-                        <span>Please add in image url for your group below:</span>
-                        <div>
-                            Image Placeholder
                         </div>
                     </section>
 

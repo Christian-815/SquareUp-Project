@@ -29,6 +29,11 @@
     padding-bottom: 2em;
 }
 
+.new-group-about {
+    width: 100%;
+    resize: none;
+}
+
 .citystate-input {
     display: flex;
     column-gap: 0.5em;
@@ -37,4 +42,5 @@
 input[type="text"], select, input[type='datetime-local'], input[type="password"] {
     background-color: #d1d1d1;
     border-radius: 9px;
+    height: 1.5em;
 }

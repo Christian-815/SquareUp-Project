@@ -33,9 +33,9 @@ export default function SingleEvent() {
 
     //
 
-    // const handleUpdateClick = () => {
-    //     history.push(`/events/${eventId}/edit`)
-    // }
+    const handleUpdateClick = () => {
+        history.push(`/events/${eventId}/edit`)
+    }
 
 
     let userLinks;
@@ -46,7 +46,7 @@ export default function SingleEvent() {
     } else if (sessionUser.id === eventObj.Host.id) {
         userLinks = (
             <div className='owner-interact'>
-                <button className='event-buttons' onClick={() => alert('Feature coming soon!')}>Update Event</button>
+                <button className='event-buttons' onClick={handleUpdateClick}>Update Event</button>
                 <button className='event-buttons'>
                     <OpenModalButton
                         buttonText="Delete"

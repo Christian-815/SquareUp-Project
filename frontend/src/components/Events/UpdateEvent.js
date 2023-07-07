@@ -1,17 +1,20 @@
 import React, { useState } from "react";
 import { useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
-import { addNewEventImage, createEvent } from "../../store/events";
-import './NewEvent.css'
+import { updateEvent } from "../../store/events";
+// import './NewEvent.css'
 
-export default function EventForm() {
+export default function UpdateEvent({ events }) {
     const dispatch = useDispatch();
     const history = useHistory();
-    const { groupid } = useParams();
+    const { eventId } = useParams();
 
     const groupsObj = useSelector(state => state.groups.groups.allGroups.Groups)
     //
-    const group = groupsObj.filter(group => group.id === parseInt(groupid))
+    const currentEvent = events.Events.filter(event => event.id === parseInt(eventId))[0]
+    console.log(currentEvent)
+
+    const group = groupsObj.filter(group => group.id === parseInt(currentEvent.groupId))
     //
 
     const today = new Date();
@@ -21,21 +24,21 @@ export default function EventForm() {
     const datePast = new Date()
     datePast.setMinutes(datePast.getMinutes() - datePast.getTimezoneOffset() + 60)
     const pastDate = datePast.toISOString().substring(0, 16)
-    console.log(todayDate, '----', pastDate)
+    // console.log(todayDate, '----', pastDate)
 
 
     const [errors, setErrors] = useState({});
     const [imageError, setImageError] = useState({});
     const [timeError, setTimeError] = useState({});
     const [venueId, setVenueId] = useState(1);
-    const [groupId, setGroupId] = useState(groupid);
-    const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
-    const [type, setType] = useState('');
+    const [groupId, setGroupId] = useState(group.id);
+    const [name, setName] = useState(currentEvent.name);
+    const [description, setDescription] = useState(currentEvent.description);
+    const [type, setType] = useState(currentEvent.type);
     const [capacity, setCapacity] = useState(100);
-    const [price, setPrice] = useState();
-    const [startDate, setStartDate] = useState();
-    const [endDate, setEndDate] = useState();
+    const [price, setPrice] = useState(currentEvent.price);
+    const [startDate, setStartDate] = useState(currentEvent.startDate);
+    const [endDate, setEndDate] = useState(currentEvent.endDate);
     const [eventImage, setEventImage] = useState(null);
 
 
@@ -54,17 +57,17 @@ export default function EventForm() {
             startDate,
             endDate
         }
-        if (!eventImage) {
-            return setImageError({imgError: 'Image must be uploaded.'})
-        } else {
-            setImageError({})
-        }
+        // if (!eventImage) {
+        //     return setImageError({ imgError: 'Image must be uploaded.' })
+        // } else {
+        //     setImageError({})
+        // }
         if (!startDate) {
-            return setTimeError({startDate: "Please choose a start date and time."})
+            return setTimeError({ startDate: "Please choose a start date and time." })
         } else if (!endDate) {
             return setTimeError({ endDate: "Please choose a end date and time." })
         } else if (start.getTime() < today.getTime()) {
-            return setTimeError({startDate: "Start date must be in the future"})
+            return setTimeError({ startDate: "Start date must be in the future" })
         } else if (start.getTime() >= end.getTime()) {
             return setTimeError({ endDate: "End date is before or the same as thestart date" })
         } else {
@@ -72,12 +75,12 @@ export default function EventForm() {
         }
 
 
-        const imagePayload = {
-            url: eventImage,
-            preview: true
-        }
+        // const imagePayload = {
+        //     url: eventImage,
+        //     preview: true
+        // }
 
-        let newEvent = await dispatch(createEvent(payload, imagePayload)).catch(
+        let updatedEvent = await dispatch(updateEvent(payload, eventId)).catch(
             async (res) => {
                 const data = await res.json();
 
@@ -85,8 +88,8 @@ export default function EventForm() {
             }
         );
 
-        if (newEvent) {
-            history.push(`/events/${newEvent.id}`)
+        if (updatedEvent) {
+            history.push(`/events/${updatedEvent.id}`)
         }
 
     };
@@ -94,16 +97,16 @@ export default function EventForm() {
     const start = new Date(startDate);
     const end = new Date(endDate);
 
-    const updateFile = (e) => {
-        const file = e.target.files[0];
-        if (file) setEventImage(file);
-    };
+    // const updateFile = (e) => {
+    //     const file = e.target.files[0];
+    //     if (file) setEventImage(file);
+    // };
 
     return (
         <div className="new-event-page">
             <div>
                 <div className="new-event-header">
-                    <h3>Create an Event for {group[0].name}</h3>
+                    <h3>Update {currentEvent.name} Event</h3>
                 </div>
                 <form onSubmit={handleSubmit} className='new-event-form'>
 
@@ -136,7 +139,7 @@ export default function EventForm() {
                         <div>Is this an in person or online group?</div>
                         <div>
                             <select onChange={(e) => setType(e.target.value)}>
-                                <option value=''>(select one)</option>
+                                <option value=''>{type}</option>
                                 <option value='Online'>Online</option>
                                 <option value='In person'>In person</option>
                             </select>
@@ -214,7 +217,7 @@ export default function EventForm() {
 
                     </section>
 
-                    <section className='new-event-section'>
+                    {/* <section className='new-event-section'>
                         <div>
                             <div>
                                 Please upload an image for your event below:
@@ -235,7 +238,7 @@ export default function EventForm() {
                             )}
                         </ul>
 
-                    </section>
+                    </section> */}
 
                     <section className='new-event-section'>
                         <div>
@@ -263,7 +266,7 @@ export default function EventForm() {
 
 
                     <section>
-                        <button type="submit" className='join-squareUp'>Create Event</button>
+                        <button type="submit" className='join-squareUp'>Update Event</button>
                     </section>
 
                 </form>

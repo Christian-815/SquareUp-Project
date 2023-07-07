@@ -4,6 +4,11 @@ const { Group, Membership, GroupImage, User, Venue, Event, Attendance, EventImag
 const { Op } = require('sequelize');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
+const {
+    singleMulterUpload,
+    singlePublicFileUpload,
+    deleteFile
+} = require("../../awsS3");
 
 const validateNewGroup = [
     check('name')
@@ -280,7 +285,7 @@ router.post('/', validateNewGroup, async (req, res) => {
 
 });
 
-router.post('/:groupId/images', async (req, res) => {
+router.post('/:groupId/images', singleMulterUpload("url"), async (req, res) => {
     const user = req.user.dataValues.id;
     if (!user) {
         return res.status(401).json({
@@ -302,11 +307,12 @@ router.post('/:groupId/images', async (req, res) => {
         })
     };
 
-    const { url, preview } = req.body
+    const { preview } = req.body;
+    const groupImageUrl = await singlePublicFileUpload(req.file);
 
     const newGroupImage = await GroupImage.create({
         groupId: group.id,
-        url,
+        url: groupImageUrl,
         preview
     });
 
