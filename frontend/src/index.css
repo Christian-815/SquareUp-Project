@@ -1,3 +1,8 @@
 /* TODO Add site wide styles */
 @import url('https://fonts.googleapis.com/css2?family=Oswald&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Merriweather&family=Oswald&display=swap');
+
+body {
+    /* background-color: #181A1B;
+    color: white; */
+}
