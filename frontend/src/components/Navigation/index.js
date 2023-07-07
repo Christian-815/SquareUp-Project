@@ -5,6 +5,7 @@ import ProfileButton from './ProfileButton';
 import OpenModalButton from '../OpenModalButton';
 import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
+import Search from '../Search';
 import './Navigation.css';
 
 function Navigation({ isLoaded }) {
@@ -55,6 +56,7 @@ function Navigation({ isLoaded }) {
                     SquareUp
                 </div>
             </h1>
+            <Search />
              { isLoaded && sessionLinks }
         </div>
     );
