@@ -36,8 +36,12 @@ export default function Events() {
         }
     }
     const turnDateToProperTime = (date) => {
-        const properDate = date.substring(0, 16);
-        const eventDate = properDate.replace(' ', ' • ')
+        const proper = new Date(date);
+        proper.setMinutes(proper.getMinutes() - proper.getTimezoneOffset())
+        const properDate = proper.toISOString().substring(0, 16)
+        console.log(date)
+        // const properDate = date.substring(0, 16);
+        const eventDate = properDate.replace('T', ' • ')
 
         return eventDate
     }

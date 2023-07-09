@@ -644,11 +644,19 @@ router.post('/:groupId/events', validateNewEvent, async (req,res) => {
     };
 
     const start = new Date(startDate);
+    start.setMinutes(start.getMinutes() - start.getTimezoneOffset())
+    const newStartDate = start.toISOString().substring(0, 16)
+
     const end = new Date(endDate);
+    end.setMinutes(end.getMinutes() - end.getTimezoneOffset())
+    const newEndDate = end.toISOString().substring(0, 16)
+
     const today = new Date();
+    today.setMinutes(today.getMinutes() - today.getTimezoneOffset())
+    const todayDate = today.toISOString().substring(0, 16)
 
 
-    if (start.getTime() < today.getTime()) {
+    if (newStartDate < todayDate) {
         return res.status(400).json({
             message: "Validation error",
             statusCode: 400,
@@ -658,7 +666,7 @@ router.post('/:groupId/events', validateNewEvent, async (req,res) => {
         })
     };
 
-    if (start.getTime() > end.getTime()) {
+    if (newStartDate > newEndDate) {
         return res.status(400).json({
             message: "Validation error",
             statusCode: 400,
@@ -677,8 +685,8 @@ router.post('/:groupId/events', validateNewEvent, async (req,res) => {
         capacity,
         price,
         description,
-        startDate,
-        endDate
+        startDate: newStartDate,
+        endDate: newEndDate
     });
 
     return res.status(200).json({

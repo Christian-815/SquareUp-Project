@@ -210,7 +210,7 @@ export default function UpdateGroup({ groups }) {
                     </section>
 
                     <section>
-                        <button type="submit">Update group</button>
+                        <button type="submit" className='join-squareUp'>Update group</button>
                     </section>
 
                 </form>
