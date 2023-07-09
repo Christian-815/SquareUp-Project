@@ -111,8 +111,12 @@ export default function SingleEvent() {
     }
 
     const turnDateToProperTime = (date) => {
-        const properDate = date.substring(0, 16);
-        const eventDate = properDate.replace(' ', ' • ')
+        const proper = new Date(date);
+        proper.setMinutes(proper.getMinutes() - proper.getTimezoneOffset())
+        const properDate = proper.toISOString().substring(0, 16)
+        console.log(date)
+        // const properDate = date.substring(0, 16);
+        const eventDate = properDate.replace('T', ' • ')
 
         return eventDate
     }
@@ -125,7 +129,7 @@ export default function SingleEvent() {
         )
     } else {
         price = (
-            <div className='event-lighterShade'>{eventObj.price}</div>
+            <div className='event-lighterShade'>${eventObj.price.toFixed(2)}</div>
         )
     }
 

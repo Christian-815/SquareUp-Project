@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import { updateEvent } from "../../store/events";
-// import './NewEvent.css'
+import '../NewEvent/NewEvent.css'
 
 export default function UpdateEvent({ events }) {
     const dispatch = useDispatch();
@@ -12,7 +12,7 @@ export default function UpdateEvent({ events }) {
     const groupsObj = useSelector(state => state.groups.groups.allGroups.Groups)
     //
     const currentEvent = events.Events.filter(event => event.id === parseInt(eventId))[0]
-    console.log(currentEvent)
+    // console.log(currentEvent)
 
     const group = groupsObj.filter(group => group.id === parseInt(currentEvent.groupId))
     //
@@ -24,8 +24,17 @@ export default function UpdateEvent({ events }) {
     const datePast = new Date()
     datePast.setMinutes(datePast.getMinutes() - datePast.getTimezoneOffset() + 60)
     const pastDate = datePast.toISOString().substring(0, 16)
+
+    const previousStart = new Date(currentEvent.startDate)
+    previousStart.setMinutes(previousStart.getMinutes() - previousStart.getTimezoneOffset())
+    const previousStartDate = previousStart.toISOString().substring(0, 16)
+
+    const previousEnd = new Date(currentEvent.endDate)
+    previousEnd.setMinutes(previousEnd.getMinutes() - previousEnd.getTimezoneOffset())
+    const previousEndDate = previousEnd.toISOString().substring(0, 16)
     // console.log(todayDate, '----', pastDate)
 
+    const previousPrice = (currentEvent.price + 0.00).toFixed(2)
 
     const [errors, setErrors] = useState({});
     const [imageError, setImageError] = useState({});
@@ -36,15 +45,17 @@ export default function UpdateEvent({ events }) {
     const [description, setDescription] = useState(currentEvent.description);
     const [type, setType] = useState(currentEvent.type);
     const [capacity, setCapacity] = useState(100);
-    const [price, setPrice] = useState(currentEvent.price);
-    const [startDate, setStartDate] = useState(currentEvent.startDate);
-    const [endDate, setEndDate] = useState(currentEvent.endDate);
+    const [price, setPrice] = useState(previousPrice);
+    const [startDate, setStartDate] = useState(previousStartDate);
+    const [endDate, setEndDate] = useState(previousEndDate);
     const [eventImage, setEventImage] = useState(null);
 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setErrors({});
+
+        // console.log('startDate', startDate, 'enddate', endDate)
 
         const payload = {
             venueId,

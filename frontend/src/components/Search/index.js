@@ -90,7 +90,7 @@ const Search = () => {
                                         {searchResult.price === 0 ?
                                             <div className="search-bar-price">FREE</div>
                                         :
-                                            <div className="search-bar-price">${searchResult.price}</div>}
+                                            <div className="search-bar-price">${searchResult.price.toFixed(2)}</div>}
                                         <div className="search-bar-location">{searchResult.Venue.city}, {searchResult.Venue.state}</div>
                                     </div>
                                 </NavLink>
@@ -101,7 +101,10 @@ const Search = () => {
                                     <img src={searchResult.previewImage} className="search-bar-spot-image" alt="Spot Preview" />
                                     <div className="search-results-content">
                                         <div className="search-bar-spot-name">{searchResult.name}</div>
-                                        <div className="search-bar-price">{searchResult.type}</div>
+                                        {searchResult.private === 0 ?
+                                            <div className="search-bar-price">Private</div>
+                                            :
+                                            <div className="search-bar-price">Public</div>}
                                         <div className="search-bar-location">{searchResult.city}, {searchResult.state}</div>
                                     </div>
                                 </NavLink>

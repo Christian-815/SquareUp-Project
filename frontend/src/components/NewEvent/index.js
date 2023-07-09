@@ -21,7 +21,7 @@ export default function EventForm() {
     const datePast = new Date()
     datePast.setMinutes(datePast.getMinutes() - datePast.getTimezoneOffset() + 60)
     const pastDate = datePast.toISOString().substring(0, 16)
-    console.log(todayDate, '----', pastDate)
+    // console.log(todayDate, '----', pastDate)
 
 
     const [errors, setErrors] = useState({});
