@@ -98,7 +98,7 @@ router.get('/', validateEventsQueries, async (req, res) => {
         attributes: {
             exclude: ['capacity', 'createdAt', 'updatedAt']
         },
-        order: [['startDate', 'DESC']],
+        order: [['createdAt', 'DESC']],
         where,
         raw: true,
         ...pagination
