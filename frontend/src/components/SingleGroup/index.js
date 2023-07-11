@@ -244,9 +244,9 @@ export default function SingleGroup() {
                         </div>
                         <div>Organized by {groupObj.Organizer.firstName} {groupObj.Organizer.lastName}</div>
                     </div>
-                    <div>
+                    {/* <div>
                         <div className='group-interaction'>{userLinks}</div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
             <div className='group-description'>
