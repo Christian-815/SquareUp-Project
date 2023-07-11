@@ -73,3 +73,8 @@
     font-family: 'Oswald', sans-serif;
     border-radius: 0.7em;
 }
+
+.home-page-footer {
+    position: relative;
+    margin-top: 23em;
+}

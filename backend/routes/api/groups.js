@@ -631,17 +631,17 @@ router.post('/:groupId/events', validateNewEvent, async (req,res) => {
 
     const { venueId, name, type, capacity, price, description, startDate, endDate } = req.body;
 
-    const checkVenueExist = await Venue.findByPk(venueId);
+    // const checkVenueExist = await Venue.findByPk(venueId);
 
-    if (!checkVenueExist) {
-        return res.status(400).json({
-            message: "Validation error",
-            statusCode: 400,
-            errors: {
-                venueId: "Venue does not exist"
-            }
-        })
-    };
+    // if (!checkVenueExist) {
+    //     return res.status(400).json({
+    //         message: "Validation error",
+    //         statusCode: 400,
+    //         errors: {
+    //             venueId: "Venue does not exist"
+    //         }
+    //     })
+    // };
 
     const start = new Date(startDate);
     start.setMinutes(start.getMinutes() - start.getTimezoneOffset())

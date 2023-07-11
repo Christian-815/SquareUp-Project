@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import OpenModalButton from '../OpenModalButton';
 import SignupFormModal from '../SignupFormModal';
+import Footer from '../Footer';
 // import OpenModalButton from '../OpenModalButton';
 // import GroupFormModal from '../Groups/NewGroupModal';
 
@@ -89,6 +90,10 @@ export default function HomePage() {
 
             <div className='redirects-links'>
                 {joinSquareUp}
+            </div>
+
+            <div className='home-page-footer'>
+                <Footer />
             </div>
         </div>
 
