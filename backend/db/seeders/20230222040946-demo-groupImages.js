@@ -48,13 +48,48 @@ module.exports = {
       },
       {
         groupId: 3,
-        url: "https://www.pngmart.com/files/3/Injustice-Logo-PNG-File.png",
+        url: "https://www.injustice.com/img/share.jpg",
         preview: true
       },
       {
         groupId: 3,
         url: "https://i.pinimg.com/originals/22/2f/33/222f3327408a4656107c4c887a787cb1.jpg",
         preview: false
+      },
+      {
+        groupId: 4,
+        url: "https://www.dexerto.com/cdn-cgi/image/width=3840,quality=75,format=auto/https://editors.dexerto.com/wp-content/uploads/2023/05/04/mortal-kombat-1-hub-date-details-e1684427028344.jpg",
+        preview: true
+      },
+      {
+        groupId: 5,
+        url: "https://insider-gaming.com/wp-content/uploads/2023/05/tekken-8-cover.jpg",
+        preview: true
+      },
+      {
+        groupId: 6,
+        url: "https://p325k7wa.twic.pics/high/dragon-ball/dragonball-fighters-z/00-page-setup/dbfz_game-thumbnail.jpg?twic=v1/resize=760/step=10/quality=80",
+        preview: true
+      },
+      {
+        groupId: 7,
+        url: "https://assets.nintendo.com/image/upload/c_fill,w_1200/q_auto:best/f_auto/dpr_2.0/ncom/software/switch/70010000012332/ac4d1fc9824876ce756406f0525d50c57ded4b2a666f6dfe40a6ac5c3563fad9",
+        preview: true
+      },
+      {
+        groupId: 8,
+        url: "https://cdn.cloudflare.steamstatic.com/steam/apps/544750/capsule_616x353.jpg?t=1646956219",
+        preview: true
+      },
+      {
+        groupId: 9,
+        url: "https://cdn.akamai.steamstatic.com/steam/apps/1384160/header.jpg?t=1685004154",
+        preview: true
+      },
+      {
+        groupId: 10,
+        url: "https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/games_15/nintendo_switch_download_software_1/2x1_NSwitchDS_Brawlhalla.jpg",
+        preview: true
       }
     ], {})
   },
